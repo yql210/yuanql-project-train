@@ -1,4 +1,4 @@
-package top.yuanql.yuanqlprojecttrain.controller;
+package top.yuanql.train.member.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +18,6 @@ public class TestController {
 
     @GetMapping("/hello")
     public String Hello() {
-        return "hello word";
+        return "hello word11122333";
     }
 }
