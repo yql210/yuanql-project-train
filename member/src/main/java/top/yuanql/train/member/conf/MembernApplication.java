@@ -20,7 +20,7 @@ public class MembernApplication {
         // 添加启动日志
         ConfigurableEnvironment environment = run.getEnvironment();
         LOG.info("启动成功！！！！");
-        LOG.info("地址：\thttp://127.0.0.1:{}/member", environment.getProperty("server.port"));
+        LOG.info("地址：\thttp://127.0.0.1:{}{}", environment.getProperty("server.port"), environment.getProperty("server.servlet.context-path"));
 
     }
 
