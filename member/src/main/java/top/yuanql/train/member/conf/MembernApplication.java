@@ -10,7 +10,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 
 @SpringBootApplication
-@ComponentScan("top.yuanql.train.member") // 配置包扫描路径。默认扫描此Java文件所在目录以及其目录下是所有文件，可以通过此命令修改默认扫描的路径
+@ComponentScan("top.yuanql.train") // 配置包扫描路径。默认扫描此Java文件所在目录以及其目录下是所有文件，可以通过此命令修改默认扫描的路径
 public class MembernApplication {
 
     private static final Logger LOG = LoggerFactory.getLogger(MembernApplication.class);
