@@ -5,4 +5,11 @@ server:
 spring:
   application:
     name: yuanql-rain-gateway
+  cloud:
+    gateway:
+      routes:  # 路由转发，将/member/... 的请求转发给member模块
+        - id: member
+          uri: http://127.0.0.1:8081
+          predicates:
+            - Path=/member/**
 

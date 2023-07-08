@@ -1,7 +1,16 @@
+
+### 测试 member 模块
 GET http://localhost:8081/member/hello
 Accept: application/json
 
+
+### 测试gateway模块
+GET http://localhost:8000/member/hello
+Accept: application/json
+
+
 ###
+
 
 
 
