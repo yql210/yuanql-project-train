@@ -1,5 +1,7 @@
 package top.yuanql.train.member.req;
 
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * @BelongsProject: yuanql-project-train
  * @BelongsPackage: top.yuanql.train.member.req
@@ -13,6 +15,7 @@ package top.yuanql.train.member.req;
 
 public class MemberRegisterReq {
 
+    @NotBlank(message = "【手机号】不能为空！")  // 当手机号为空的时候，向前端返回此内容
     private String mobile;
 
     public String getMobile() {

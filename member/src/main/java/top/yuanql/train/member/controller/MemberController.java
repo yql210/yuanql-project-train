@@ -1,6 +1,7 @@
 package top.yuanql.train.member.controller;
 
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +37,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public CommonResp<Long> trgister(MemberRegisterReq req) {
+    public CommonResp<Long> trgister(@Valid MemberRegisterReq req) {  // @Valid：相当于 校验框架 的开关注解，加入此注解才能生效
         long register = memberService.register(req);
 //        CommonResp<Long> longCommonResp = new CommonResp<>();
 //        longCommonResp.setContent(register);
