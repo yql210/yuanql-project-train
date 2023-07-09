@@ -3,6 +3,8 @@ package top.yuanql.train.member.service.Impl;
 import cn.hutool.core.collection.CollUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import top.yuanql.train.common.exception.BusinessException;
+import top.yuanql.train.common.exception.BusinessExceptionEnum;
 import top.yuanql.train.member.domain.Member;
 import top.yuanql.train.member.domain.MemberExample;
 import top.yuanql.train.member.mapper.MemberMapper;
@@ -44,7 +46,8 @@ public class MenberServiceImpl implements MemberService {
 
         if (CollUtil.isNotEmpty(members)) {
 //            return members.get(0).getId();
-            throw new RuntimeException("此手机号已注册，请勿重复注册");
+//            throw new RuntimeException("此手机号已注册，请勿重复注册");
+            throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_EXIST);
         }
 
         Member member = new Member();
