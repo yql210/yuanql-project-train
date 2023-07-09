@@ -1,6 +1,6 @@
 package top.yuanql.train.member.service;
 
-import org.apache.ibatis.annotations.Param;
+import top.yuanql.train.member.req.MemberRegisterReq;
 
 /**
  * @BelongsProject: yuanql-project-train
@@ -18,5 +18,5 @@ public interface MemberService {
     public int count();
 
 
-    public long register(@Param("mobile") String mobile);
+    public long register(MemberRegisterReq req);
 }

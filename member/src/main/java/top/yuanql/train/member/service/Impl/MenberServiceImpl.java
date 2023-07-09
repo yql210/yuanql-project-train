@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import top.yuanql.train.member.domain.Member;
 import top.yuanql.train.member.domain.MemberExample;
 import top.yuanql.train.member.mapper.MemberMapper;
+import top.yuanql.train.member.req.MemberRegisterReq;
 import top.yuanql.train.member.service.MemberService;
 
 import java.util.List;
@@ -33,7 +34,9 @@ public class MenberServiceImpl implements MemberService {
     }
 
     @Override
-    public long register(String mobile) {
+    public long register(MemberRegisterReq req) {
+
+        String mobile = req.getMobile();
 
         MemberExample memberExample = new MemberExample();
         memberExample.createCriteria().andMobileEqualTo(mobile);
