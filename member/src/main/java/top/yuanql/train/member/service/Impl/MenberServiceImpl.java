@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.common.exception.BusinessException;
 import top.yuanql.train.common.exception.BusinessExceptionEnum;
+import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.member.domain.Member;
 import top.yuanql.train.member.domain.MemberExample;
 import top.yuanql.train.member.mapper.MemberMapper;
@@ -51,7 +52,7 @@ public class MenberServiceImpl implements MemberService {
         }
 
         Member member = new Member();
-        member.setId(System.currentTimeMillis());
+        member.setId(SnowUtil.getSnowflakeNextId());
         member.setMobile(mobile);
 
         int insert = memberMapper.insert(member);
