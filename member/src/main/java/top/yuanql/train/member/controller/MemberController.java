@@ -1,7 +1,9 @@
 package top.yuanql.train.member.controller;
 
 import jakarta.annotation.Resource;
+import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.yuanql.train.member.service.MemberService;
@@ -26,5 +28,10 @@ public class MemberController {
     @GetMapping("/count")
     public String count() {
         return String.valueOf(memberService.count());
+    }
+
+    @PostMapping("/register")
+    public Long trgister(@PathParam("mobile") String mobile) {
+        return memberService.register(mobile);
     }
 }
