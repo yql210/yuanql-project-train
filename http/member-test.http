@@ -9,28 +9,26 @@ GET http://localhost:8000/member/hello
 Accept: application/json
 
 
-###
-
+### 测试连接数据库
 
 GET http://localhost:8000/member/member/count
 Accept: application/json
 
-###
-
+### 测试向数据库中添加数据
 
 POST http://localhost:8000/member/member/register
 Content-Type: application/x-www-form-urlencoded
 
 mobile=213123
 
-###
+### 测试生成验证码
 
 POST http://localhost:8000/member/member/send_code
 Content-Type: application/x-www-form-urlencoded
 
 mobile=12345678901
 
-###
+### 测试带验证码登录接口
 
 POST http://localhost:8000/member/member/login
 Content-Type: application/x-www-form-urlencoded
