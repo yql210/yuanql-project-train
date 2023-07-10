@@ -32,3 +32,10 @@ mobile=12345678901
 
 ###
 
+POST http://localhost:8000/member/member/login
+Content-Type: application/x-www-form-urlencoded
+
+mobile=12345678901&code=8888
+
+###
+

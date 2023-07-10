@@ -1,6 +1,8 @@
 package top.yuanql.train.member.service.Impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +14,10 @@ import top.yuanql.train.member.conf.MemberApplication;
 import top.yuanql.train.member.domain.Member;
 import top.yuanql.train.member.domain.MemberExample;
 import top.yuanql.train.member.mapper.MemberMapper;
+import top.yuanql.train.member.req.MemberLoginReq;
 import top.yuanql.train.member.req.MemberRegisterReq;
 import top.yuanql.train.member.req.MemberSendCodeReq;
+import top.yuanql.train.member.response.MemberLoginResp;
 import top.yuanql.train.member.service.MemberService;
 
 import java.util.List;
@@ -46,11 +50,9 @@ public class MenberServiceImpl implements MemberService {
 
         String mobile = req.getMobile();
 
-        MemberExample memberExample = new MemberExample();
-        memberExample.createCriteria().andMobileEqualTo(mobile);
-        List<Member> members = memberMapper.selectByExample(memberExample);
+        Member memberDB = selectByMobile(mobile);
 
-        if (CollUtil.isNotEmpty(members)) {
+        if (ObjectUtil.isNotNull(memberDB)) {
 //            return members.get(0).getId();
 //            throw new RuntimeException("此手机号已注册，请勿重复注册");
             throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_EXIST);
@@ -69,12 +71,10 @@ public class MenberServiceImpl implements MemberService {
     public void sendCode(MemberSendCodeReq req) {
         String mobile = req.getMobile();
 
-        MemberExample memberExample = new MemberExample();
-        memberExample.createCriteria().andMobileEqualTo(mobile);
-        List<Member> members = memberMapper.selectByExample(memberExample);
+        Member members = selectByMobile(mobile);
 
         // 如果手机号没有在用户表中，则插入一条放入到用户表中
-        if (CollUtil.isEmpty(members)) {
+        if (ObjectUtil.isNull(members)) {
             Member member = new Member();
             member.setId(SnowUtil.getSnowflakeNextId());
             member.setMobile(mobile);
@@ -92,5 +92,39 @@ public class MenberServiceImpl implements MemberService {
         // 对接短信通道，发送短信
         LOG.info("对接短信通道");
 
+    }
+
+    @Override
+    public MemberLoginResp login(MemberLoginReq req) {
+
+        String code = req.getCode();
+        String mobile = req.getMobile();
+        Member members = selectByMobile(mobile);
+
+        if (ObjectUtil.isNull(members)) {
+            throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_NOT_EXIST);
+        }
+
+        if (!"8888".equals(code)) {
+            throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_CODE_ERROR);
+        }
+
+        return BeanUtil.copyProperties(members, MemberLoginResp.class);
+    }
+
+    /**
+     * 抽取除的函数，其主要用于判断数据库中是否存在传入的 mobile 电话号码
+     * @param mobile 传入的电话号码，11位
+     * @return
+     */
+    private Member selectByMobile(String mobile) {
+        MemberExample memberExample = new MemberExample();
+        memberExample.createCriteria().andMobileEqualTo(mobile);
+        List<Member> members = memberMapper.selectByExample(memberExample);
+        if (CollUtil.isEmpty(members)) {
+            return null;
+        } else {
+            return members.get(0);
+        }
     }
 }

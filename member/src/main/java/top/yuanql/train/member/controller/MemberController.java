@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.yuanql.train.common.response.CommonResp;
+import top.yuanql.train.member.req.MemberLoginReq;
 import top.yuanql.train.member.req.MemberRegisterReq;
 import top.yuanql.train.member.req.MemberSendCodeReq;
+import top.yuanql.train.member.response.MemberLoginResp;
 import top.yuanql.train.member.service.MemberService;
 
 /**
@@ -52,7 +54,7 @@ public class MemberController {
     }
 
     /**
-     * 获取验证码，验证码的生成
+     * 生成验证码，验证码的生成
      * @param req POST请求传输的数据
      * @return 返回请求的数值
      */
@@ -60,5 +62,16 @@ public class MemberController {
     public CommonResp<Long> sendCode(@Valid MemberSendCodeReq req) {  // @Valid：相当于 校验框架 的开关注解，加入此注解才能生效
         memberService.sendCode(req);
         return new CommonResp<>();
+    }
+
+    /**
+     * 用户输入验证码之后，进行登录相关的操作
+     * @param req
+     * @return
+     */
+    @PostMapping("/login")
+    public CommonResp<MemberLoginResp> login(@Valid MemberLoginReq req) {  // @Valid：相当于 校验框架 的开关注解，加入此注解才能生效
+        MemberLoginResp resp = memberService.login(req);
+        return new CommonResp<>(resp);
     }
 }
