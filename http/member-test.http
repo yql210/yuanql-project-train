@@ -25,3 +25,10 @@ mobile=213123
 
 ###
 
+POST http://localhost:8000/member/member/send_code
+Content-Type: application/x-www-form-urlencoded
+
+mobile=12345678901
+
+###
+

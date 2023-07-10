@@ -1,6 +1,7 @@
 package top.yuanql.train.member.service;
 
 import top.yuanql.train.member.req.MemberRegisterReq;
+import top.yuanql.train.member.req.MemberSendCodeReq;
 
 /**
  * @BelongsProject: yuanql-project-train
@@ -19,4 +20,6 @@ public interface MemberService {
 
 
     public long register(MemberRegisterReq req);
+
+    public void sendCode(MemberSendCodeReq req);
 }

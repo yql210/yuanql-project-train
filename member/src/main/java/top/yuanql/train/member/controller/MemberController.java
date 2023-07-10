@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.yuanql.train.common.response.CommonResp;
 import top.yuanql.train.member.req.MemberRegisterReq;
+import top.yuanql.train.member.req.MemberSendCodeReq;
 import top.yuanql.train.member.service.MemberService;
 
 /**
@@ -36,6 +37,11 @@ public class MemberController {
         return new CommonResp<>(count);
     }
 
+    /**
+     * 测试向数据库中添加数据
+     * @param req
+     * @return
+     */
     @PostMapping("/register")
     public CommonResp<Long> trgister(@Valid MemberRegisterReq req) {  // @Valid：相当于 校验框架 的开关注解，加入此注解才能生效
         long register = memberService.register(req);
@@ -43,5 +49,16 @@ public class MemberController {
 //        longCommonResp.setContent(register);
 //        return longCommonResp;
         return new CommonResp<>(register);
+    }
+
+    /**
+     * 获取验证码，验证码的生成
+     * @param req POST请求传输的数据
+     * @return 返回请求的数值
+     */
+    @PostMapping("/send_code")
+    public CommonResp<Long> sendCode(@Valid MemberSendCodeReq req) {  // @Valid：相当于 校验框架 的开关注解，加入此注解才能生效
+        memberService.sendCode(req);
+        return new CommonResp<>();
     }
 }
