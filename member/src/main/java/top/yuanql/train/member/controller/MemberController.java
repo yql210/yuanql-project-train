@@ -2,10 +2,7 @@ package top.yuanql.train.member.controller;
 
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.yuanql.train.common.response.CommonResp;
 import top.yuanql.train.member.req.MemberLoginReq;
 import top.yuanql.train.member.req.MemberRegisterReq;
@@ -59,7 +56,7 @@ public class MemberController {
      * @return 返回请求的数值
      */
     @PostMapping("/send_code")
-    public CommonResp<Long> sendCode(@Valid MemberSendCodeReq req) {  // @Valid：相当于 校验框架 的开关注解，加入此注解才能生效
+    public CommonResp<Long> sendCode(@Valid @RequestBody MemberSendCodeReq req) {  // @Valid：相当于 校验框架 的开关注解，加入此注解才能生效
         memberService.sendCode(req);
         return new CommonResp<>();
     }

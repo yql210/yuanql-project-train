@@ -24,9 +24,11 @@ mobile=213123
 ### 测试生成验证码
 
 POST http://localhost:8000/member/member/send_code
-Content-Type: application/x-www-form-urlencoded
+Content-Type: application/json
 
-mobile=12345678901
+{
+  "mobile": "12345678901"
+}
 
 ### 测试带验证码登录接口
 
