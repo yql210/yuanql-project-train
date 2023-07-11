@@ -67,7 +67,7 @@ public class MemberController {
      * @return
      */
     @PostMapping("/login")
-    public CommonResp<MemberLoginResp> login(@Valid MemberLoginReq req) {  // @Valid：相当于 校验框架 的开关注解，加入此注解才能生效
+    public CommonResp<MemberLoginResp> login(@Valid @RequestBody MemberLoginReq req) {  // @Valid：相当于 校验框架 的开关注解，加入此注解才能生效
         MemberLoginResp resp = memberService.login(req);
         return new CommonResp<>(resp);
     }
