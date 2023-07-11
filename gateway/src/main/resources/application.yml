@@ -12,4 +12,12 @@ spring:
           uri: http://127.0.0.1:8081
           predicates:
             - Path=/member/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowCredentials: true
+            allowedHeaders: '*'
+            allowedMethods: '*'
+            allowedOriginPatterns: '*'
+            maxAge: 3600
 
