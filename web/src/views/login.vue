@@ -43,10 +43,12 @@
 import { defineComponent, reactive } from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   name: "train-login-view",  // 此处加入可以解决Vue页面报错的问题
   setup() {
+    const router = useRouter();
     const loginForm = reactive({
       mobile: '13000000000',
       code: '',
@@ -73,6 +75,7 @@ export default defineComponent({
         if (data.success) {
           notification.success({description: '登录成功！！！' });
           console.log("登录成功：", data.content);
+          router.push("/"); // 登录成功后，跳转到控制台主页
         } else {
           notification.error({ description: data.message });
         }
