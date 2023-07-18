@@ -14,9 +14,7 @@
         </a-layout-content>
       </a-layout>
     </a-layout-content>
-    <a-layout-footer style="text-align: center">
-      Ant Design ©2023 Created by Yuanql
-    </a-layout-footer>
+    <train-the-footer-view></train-the-footer-view>
   </a-layout>
 </template>
 
@@ -24,10 +22,11 @@
 import {defineComponent} from "vue";
 import TrainTheHeaderView from "@/components/the-header.vue";
 import TrainTheSiderView from "@/components/the-sider.vue";
+import TrainTheFooterView from "@/components/the-footer.vue";
 
 export default defineComponent({
   name: "train-main-view",
-  components: {TrainTheSiderView, TrainTheHeaderView}
+  components: {TrainTheFooterView, TrainTheSiderView, TrainTheHeaderView}
 });
 </script>
 
