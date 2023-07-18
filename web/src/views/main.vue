@@ -1,24 +1,7 @@
 <template>
   <a-layout id="components-layout-demo-top-side">
-    <a-layout-header class="header">
-      <div class="logo" />
-      <a-menu
-          v-model:selectedKeys="selectedKeys1"
-          theme="dark"
-          mode="horizontal"
-          :style="{ lineHeight: '64px' }"
-      >
-        <a-menu-item key="1">nav 1</a-menu-item>
-        <a-menu-item key="2">nav 2</a-menu-item>
-        <a-menu-item key="3">nav 3</a-menu-item>
-      </a-menu>
-    </a-layout-header>
+    <train-the-header-view></train-the-header-view>
     <a-layout-content style="padding: 0 50px">
-      <a-breadcrumb style="margin: 16px 0">
-        <a-breadcrumb-item>Home</a-breadcrumb-item>
-        <a-breadcrumb-item>List</a-breadcrumb-item>
-        <a-breadcrumb-item>App</a-breadcrumb-item>
-      </a-breadcrumb>
       <a-layout style="padding: 24px 0; background: #fff">
         <a-layout-sider width="200" style="background: #fff">
           <a-menu
@@ -66,25 +49,33 @@
           </a-menu>
         </a-layout-sider>
         <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
+          <a-breadcrumb style="margin: 16px 0">
+            <a-breadcrumb-item>Home</a-breadcrumb-item>
+            <a-breadcrumb-item>List</a-breadcrumb-item>
+            <a-breadcrumb-item>App</a-breadcrumb-item>
+          </a-breadcrumb>
           Content
         </a-layout-content>
       </a-layout>
     </a-layout-content>
     <a-layout-footer style="text-align: center">
-      Ant Design ©2018 Created by Ant UED
+      Ant Design ©2023 Created by Yuanql
     </a-layout-footer>
   </a-layout>
 </template>
 
 <script>
 import {defineComponent} from "vue";
+import TrainTheHeaderView from "@/components/the-header.vue";
 
 export default defineComponent({
-  name: "train-main-view"
+  name: "train-main-view",
+  components: {TrainTheHeaderView}
 });
 </script>
 
-<style scoped>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style>
 #components-layout-demo-top-side .logo {
   float: left;
   width: 120px;
