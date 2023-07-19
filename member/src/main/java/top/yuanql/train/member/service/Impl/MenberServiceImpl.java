@@ -3,6 +3,7 @@ package top.yuanql.train.member.service.Impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.jwt.JWTUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import top.yuanql.train.member.response.MemberLoginResp;
 import top.yuanql.train.member.service.MemberService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @BelongsProject: yuanql-project-train
@@ -109,7 +111,12 @@ public class MenberServiceImpl implements MemberService {
             throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_CODE_ERROR);
         }
 
-        return BeanUtil.copyProperties(members, MemberLoginResp.class);
+        MemberLoginResp memberLoginResp = BeanUtil.copyProperties(members, MemberLoginResp.class);
+        Map<String, Object> map = BeanUtil.beanToMap(memberLoginResp);
+        String key = "yuanql12306";
+        String token = JWTUtil.createToken(map, key.getBytes());
+        memberLoginResp.setToken(token);
+        return memberLoginResp;
     }
 
     /**
