@@ -1,11 +1,13 @@
 
-### 测试带验证码登录接口
+### 测试passenger插入新数据
 
-POST http://localhost:8081/member/passenger/save
+POST http://localhost:8000/member/passenger/save
 Content-Type: application/json
+token: {{token}}
 
 {
   "memberId": "1",
+  "name": "test001",
   "idCard": "1223344",
   "type": "1"
 }
