@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import top.yuanql.train.common.context.LoginMemberContext;
 import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.member.conf.MemberApplication;
 import top.yuanql.train.member.domain.Passenger;
@@ -35,6 +36,7 @@ public class PassengerServiceImpl implements PassengerService {
     public void save(PassengerSaveReq passengerSaveReq) {
         DateTime now = DateTime.now();
         Passenger passenger = BeanUtil.copyProperties(passengerSaveReq, Passenger.class);
+        passenger.setMemberId(LoginMemberContext.getId());
         passenger.setId(SnowUtil.getSnowflakeNextId());
         passenger.setCreateTime(now);
         passenger.setUpdateTime(now);

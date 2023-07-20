@@ -117,7 +117,7 @@ public class MenberServiceImpl implements MemberService {
     }
 
     /**
-     * 抽取除的函数，其主要用于判断数据库中是否存在传入的 mobile 电话号码
+     * 抽取出的函数，其主要用于判断数据库中是否存在传入的 mobile 电话号码
      * @param mobile 传入的电话号码，11位
      * @return
      */
