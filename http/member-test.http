@@ -13,6 +13,7 @@ Accept: application/json
 
 GET http://localhost:8000/member/member/count
 Accept: application/json
+token: 12321
 
 ### 测试向数据库中添加数据
 
