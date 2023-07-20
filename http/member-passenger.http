@@ -6,7 +6,6 @@ Content-Type: application/json
 
 {
   "memberId": "1",
-  "name": "test",
   "idCard": "1223344",
   "type": "1"
 }
