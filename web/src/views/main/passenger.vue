@@ -92,11 +92,12 @@ export default defineComponent({
     ];
 
     const onAdd = () => {
+      passenger.value = {};
       visible.value = true;
     };
 
     const onEdit = (record) => {
-      passenger.value = record;
+      passenger.value = window.Tool.copy(record);
       visible.value = true;
     };
 
