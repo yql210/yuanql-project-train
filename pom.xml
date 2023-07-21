@@ -18,7 +18,7 @@
         <module>member</module>
         <module>common</module>
         <module>gateway</module>
-        <module>genertor</module>
+        <module>generator</module>
     </modules>
     <properties>
         <java.version>17</java.version>

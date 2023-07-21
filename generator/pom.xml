@@ -10,13 +10,23 @@
     </parent>
 
     <groupId>top.yuanql.train</groupId>
-    <artifactId>genertor</artifactId>
+    <artifactId>generator</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <!-- 模板引擎freemarker -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+
+
+    </dependencies>
 
     <build>
         <plugins>
