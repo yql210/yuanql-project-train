@@ -6,7 +6,21 @@ Content-Type: application/json
 token: {{token}}
 
 {
-  "name": "test001",
+  "name": "grfgfdtest001",
+  "idCard": "1223344",
+  "type": "1"
+}
+
+### 测试passenger编辑数据
+
+POST http://localhost:8000/member/passenger/save
+Content-Type: application/json
+token: {{token}}
+
+{
+  "id": 1682260954986975232,
+  "memberId": 1678395468868096000,
+  "name": "grfgfd11111111",
   "idCard": "1223344",
   "type": "1"
 }
