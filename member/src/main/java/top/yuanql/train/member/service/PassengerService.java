@@ -1,10 +1,9 @@
 package top.yuanql.train.member.service;
 
+import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.member.req.PassengerQueryReq;
 import top.yuanql.train.member.req.PassengerSaveReq;
 import top.yuanql.train.member.response.PassengerResp;
-
-import java.util.List;
 
 /**
  * @BelongsProject: yuanql-project-train
@@ -21,6 +20,6 @@ public interface PassengerService {
 
     public void save(PassengerSaveReq passengerSaveReq);
 
-    public List<PassengerResp> querList(PassengerQueryReq req);
+    public PageResp<PassengerResp> querList(PassengerQueryReq req);
 
 }

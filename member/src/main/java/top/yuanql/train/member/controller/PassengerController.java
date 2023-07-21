@@ -5,12 +5,11 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import top.yuanql.train.common.context.LoginMemberContext;
 import top.yuanql.train.common.response.CommonResp;
+import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.member.req.PassengerQueryReq;
 import top.yuanql.train.member.req.PassengerSaveReq;
 import top.yuanql.train.member.response.PassengerResp;
 import top.yuanql.train.member.service.PassengerService;
-
-import java.util.List;
 
 /**
  * @BelongsProject: yuanql-project-train
@@ -37,9 +36,9 @@ public class PassengerController {
     }
 
     @GetMapping("/query-list")
-    public CommonResp<List<PassengerResp>> queryList(@Valid PassengerQueryReq req) {
+    public CommonResp<PageResp<PassengerResp>> queryList(@Valid PassengerQueryReq req) {
         req.setMemberId(LoginMemberContext.getId());
-        List<PassengerResp> passengerResps = passengerService.querList(req);
+        PageResp<PassengerResp> passengerResps = passengerService.querList(req);
         return new CommonResp<>(passengerResps);
     }
 
