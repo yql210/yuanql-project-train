@@ -22,4 +22,5 @@ public interface PassengerService {
 
     public PageResp<PassengerResp> querList(PassengerQueryReq req);
 
+    void delete(Long id);
 }

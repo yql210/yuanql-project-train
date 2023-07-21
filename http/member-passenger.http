@@ -25,6 +25,13 @@ token: {{token}}
   "type": "1"
 }
 
+### 测试passenger删除数据
+
+DELETE http://localhost:8000/member/passenger/delete/1682030308611985408
+Content-Type: application/json
+token: {{token}}
+
+
 ### 查询乘车人列表
 GET http://localhost:8000/member/passenger/query-list?page=1&size=4
 Content-Type: application/json
