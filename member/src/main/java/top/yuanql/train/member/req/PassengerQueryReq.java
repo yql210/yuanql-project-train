@@ -1,6 +1,8 @@
 package top.yuanql.train.member.req;
 
-public class PassengerQueryReq {
+import top.yuanql.train.common.request.PageReq;
+
+public class PassengerQueryReq extends PageReq {
 
     private Long memberId;
 

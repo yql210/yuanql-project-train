@@ -12,7 +12,7 @@ token: {{token}}
 }
 
 ### 查询乘车人列表
-GET http://localhost:8000/member/passenger/query-list
+GET http://localhost:8000/member/passenger/query-list?page=2&size=200
 Content-Type: application/json
 token: {{token}}
 
