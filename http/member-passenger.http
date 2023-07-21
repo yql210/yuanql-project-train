@@ -11,5 +11,11 @@ token: {{token}}
   "type": "1"
 }
 
+### 查询乘车人列表
+GET http://localhost:8000/member/passenger/query-list
+Content-Type: application/json
+token: {{token}}
+
+
 ###
 
