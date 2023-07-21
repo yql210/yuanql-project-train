@@ -3,6 +3,7 @@ package top.yuanql.train.member.service.Impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
+import com.github.pagehelper.PageHelper;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,7 @@ public class PassengerServiceImpl implements PassengerService {
         if (ObjectUtil.isNotNull(req.getMemberId())) {
             criteria.andMemberIdEqualTo(req.getMemberId());
         }
+        PageHelper.startPage(2, 2);
         List<Passenger> passengerList = passengerMapper.selectByExample(passengerExample);
         return BeanUtil.copyToList(passengerList, PassengerResp.class);
     }
