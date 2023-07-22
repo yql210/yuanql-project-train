@@ -1,4 +1,4 @@
-package top.yuanql.train.member.service.Impl;
+package top.yuanql.train.${module}.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 import top.yuanql.train.common.context.LoginMemberContext;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
-import top.yuanql.train.member.conf.MemberApplication;
-import top.yuanql.train.member.domain.${Domain};
-import top.yuanql.train.member.domain.${Domain}Example;
-import top.yuanql.train.member.mapper.${Domain}Mapper;
-import top.yuanql.train.member.req.${Domain}QueryReq;
-import top.yuanql.train.member.req.${Domain}SaveReq;
-import top.yuanql.train.member.response.${Domain}Resp;
-import top.yuanql.train.member.service.${Domain}Service;
+import top.yuanql.train.${module}.conf.MemberApplication;
+import top.yuanql.train.${module}.domain.${Domain};
+import top.yuanql.train.${module}.domain.${Domain}Example;
+import top.yuanql.train.${module}.mapper.${Domain}Mapper;
+import top.yuanql.train.${module}.req.${Domain}QueryReq;
+import top.yuanql.train.${module}.req.${Domain}SaveReq;
+import top.yuanql.train.${module}.response.${Domain}Resp;
+import top.yuanql.train.${module}.service.${Domain}Service;
 
 import java.util.List;
 

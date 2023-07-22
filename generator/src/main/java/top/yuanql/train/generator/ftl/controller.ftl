@@ -1,4 +1,4 @@
-package top.yuanql.train.member.controller;
+package top.yuanql.train.${module}.controller;
 
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import top.yuanql.train.common.context.LoginMemberContext;
 import top.yuanql.train.common.response.CommonResp;
 import top.yuanql.train.common.response.PageResp;
-import top.yuanql.train.member.req.${Domain}QueryReq;
-import top.yuanql.train.member.req.${Domain}SaveReq;
-import top.yuanql.train.member.response.${Domain}Resp;
-import top.yuanql.train.member.service.${Domain}Service;
+import top.yuanql.train.${module}.req.${Domain}QueryReq;
+import top.yuanql.train.${module}.req.${Domain}SaveReq;
+import top.yuanql.train.${module}.response.${Domain}Resp;
+import top.yuanql.train.${module}.service.${Domain}Service;
 
 
 @RestController

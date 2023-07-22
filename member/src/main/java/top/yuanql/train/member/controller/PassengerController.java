@@ -11,16 +11,6 @@ import top.yuanql.train.member.req.PassengerSaveReq;
 import top.yuanql.train.member.response.PassengerResp;
 import top.yuanql.train.member.service.PassengerService;
 
-/**
- * @BelongsProject: yuanql-project-train
- * @BelongsPackage: top.yuanql.train.member.controller
- * @BelongsClassName: PassengerController
- * @Author: yuanql
- * @CreateTime: 2023-07-20  18:44
- * @Description: 乘客信息控制层
- * @Version: 1.0
- */
-
 
 @RestController
 @RequestMapping("/passenger")

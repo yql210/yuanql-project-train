@@ -23,15 +23,6 @@ import top.yuanql.train.member.service.PassengerService;
 
 import java.util.List;
 
-/**
- * @BelongsProject: yuanql-project-train
- * @BelongsPackage: top.yuanql.train.member.service.Impl
- * @BelongsClassName: PassengerServiceImpl
- * @Author: yuanql
- * @CreateTime: 2023-07-20  18:37
- * @Description: 乘客
- * @Version: 1.0
- */
 
 @Service
 public class PassengerServiceImpl implements PassengerService {
