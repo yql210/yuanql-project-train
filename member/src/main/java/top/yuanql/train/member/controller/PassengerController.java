@@ -8,7 +8,7 @@ import top.yuanql.train.common.response.CommonResp;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.member.req.PassengerQueryReq;
 import top.yuanql.train.member.req.PassengerSaveReq;
-import top.yuanql.train.member.response.PassengerResp;
+import top.yuanql.train.member.response.PassengerQueryResp;
 import top.yuanql.train.member.service.PassengerService;
 
 
@@ -26,9 +26,9 @@ public class PassengerController {
     }
 
     @GetMapping("/query-list")
-    public CommonResp<PageResp<PassengerResp>> queryList(@Valid PassengerQueryReq req) {
+    public CommonResp<PageResp<PassengerQueryResp>> queryList(@Valid PassengerQueryReq req) {
         req.setMemberId(LoginMemberContext.getId());
-        PageResp<PassengerResp> passengerResps = passengerService.querList(req);
+        PageResp<PassengerQueryResp> passengerResps = passengerService.querList(req);
         return new CommonResp<>(passengerResps);
     }
 

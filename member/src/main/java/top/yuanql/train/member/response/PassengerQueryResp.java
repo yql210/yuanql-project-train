@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import java.util.Date;
 
-public class PassengerResp {
+public class PassengerQueryResp {
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;

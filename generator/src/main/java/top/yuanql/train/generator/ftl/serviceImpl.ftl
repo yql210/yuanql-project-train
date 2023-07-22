@@ -17,7 +17,7 @@ import top.yuanql.train.${module}.domain.${Domain}Example;
 import top.yuanql.train.${module}.mapper.${Domain}Mapper;
 import top.yuanql.train.${module}.req.${Domain}QueryReq;
 import top.yuanql.train.${module}.req.${Domain}SaveReq;
-import top.yuanql.train.${module}.response.${Domain}Resp;
+import top.yuanql.train.${module}.response.${Domain}QueryResp;
 import top.yuanql.train.${module}.service.${Domain}Service;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class ${Domain}ServiceImpl implements ${Domain}Service {
     }
 
     @Override
-    public PageResp<${Domain}Resp> querList(${Domain}QueryReq req) {
+    public PageResp<${Domain}QueryResp> querList(${Domain}QueryReq req) {
         ${Domain}Example ${domain}Example = new ${Domain}Example();
         ${domain}Example.setOrderByClause("id desc");
         ${Domain}Example.Criteria criteria = ${domain}Example.createCriteria();
@@ -62,11 +62,11 @@ public class ${Domain}ServiceImpl implements ${Domain}Service {
         LOG.info("总行数：{}", pageInfo.getTotal());
         LOG.info("总页数：{}", pageInfo.getPages());
 
-        List<${Domain}Resp> ${domain}Resps = BeanUtil.copyToList(${domain}List, ${Domain}Resp.class);
+        List<${Domain}QueryResp> ${domain}QueryResps = BeanUtil.copyToList(${domain}List, ${Domain}QueryResp.class);
 
-        PageResp<${Domain}Resp> pageResp = new PageResp<>();
+        PageResp<${Domain}QueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
-        pageResp.setList(${domain}Resps);
+        pageResp.setList(${domain}QueryResps);
         return pageResp;
     }
 

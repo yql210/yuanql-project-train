@@ -18,7 +18,7 @@ import top.yuanql.train.member.domain.PassengerExample;
 import top.yuanql.train.member.mapper.PassengerMapper;
 import top.yuanql.train.member.req.PassengerQueryReq;
 import top.yuanql.train.member.req.PassengerSaveReq;
-import top.yuanql.train.member.response.PassengerResp;
+import top.yuanql.train.member.response.PassengerQueryResp;
 import top.yuanql.train.member.service.PassengerService;
 
 import java.util.List;
@@ -50,7 +50,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public PageResp<PassengerResp> querList(PassengerQueryReq req) {
+    public PageResp<PassengerQueryResp> querList(PassengerQueryReq req) {
         PassengerExample passengerExample = new PassengerExample();
         passengerExample.setOrderByClause("id desc");
         PassengerExample.Criteria criteria = passengerExample.createCriteria();
@@ -66,9 +66,9 @@ public class PassengerServiceImpl implements PassengerService {
         LOG.info("总行数：{}", pageInfo.getTotal());
         LOG.info("总页数：{}", pageInfo.getPages());
 
-        List<PassengerResp> passengerResps = BeanUtil.copyToList(passengerList, PassengerResp.class);
+        List<PassengerQueryResp> passengerResps = BeanUtil.copyToList(passengerList, PassengerQueryResp.class);
 
-        PageResp<PassengerResp> pageResp = new PageResp<>();
+        PageResp<PassengerQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(passengerResps);
         return pageResp;

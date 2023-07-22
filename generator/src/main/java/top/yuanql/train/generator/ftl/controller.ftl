@@ -8,7 +8,7 @@ import top.yuanql.train.common.response.CommonResp;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.${module}.req.${Domain}QueryReq;
 import top.yuanql.train.${module}.req.${Domain}SaveReq;
-import top.yuanql.train.${module}.response.${Domain}Resp;
+import top.yuanql.train.${module}.response.${Domain}QueryResp;
 import top.yuanql.train.${module}.service.${Domain}Service;
 
 
@@ -26,9 +26,9 @@ public class ${Domain}Controller {
     }
 
     @GetMapping("/query-list")
-    public CommonResp<PageResp<${Domain}Resp>> queryList(@Valid ${Domain}QueryReq req) {
+    public CommonResp<PageResp<${Domain}QueryResp>> queryList(@Valid ${Domain}QueryReq req) {
         req.setMemberId(LoginMemberContext.getId());
-        PageResp<${Domain}Resp> ${domain}Resps = ${domain}Service.querList(req);
+        PageResp<${Domain}QueryResp> ${domain}Resps = ${domain}Service.querList(req);
         return new CommonResp<>(${domain}Resps);
     }
 
