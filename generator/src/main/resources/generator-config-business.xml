@@ -41,8 +41,6 @@
                              targetPackage="top.yuanql.train.business.mapper"
                              type="XMLMAPPER"/>
 
-        <table tableName="member" domainObjectName="Member"/>
-<!--        <table tableName="passenger" domainObjectName="Passenger"/>-->
-<!--        <table tableName="ticket" domainObjectName="Ticket"/>-->
+        <table tableName="station" domainObjectName="Station"/>
     </context>
 </generatorConfiguration>

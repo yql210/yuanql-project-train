@@ -9,9 +9,9 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import top.yuanql.train.${module}.config.BusinessApplication;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
-import top.yuanql.train.${module}.conf.MemberApplication;
 import top.yuanql.train.${module}.domain.${Domain};
 import top.yuanql.train.${module}.domain.${Domain}Example;
 import top.yuanql.train.${module}.mapper.${Domain}Mapper;
@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 public class ${Domain}ServiceImpl implements ${Domain}Service {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MemberApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BusinessApplication.class);
 
     @Resource
     private ${Domain}Mapper ${domain}Mapper;

@@ -16,7 +16,7 @@ import java.util.*;
 public class ServerGenerator {
 
     static boolean readOnly = false;
-    static String vuePath = "web/src/views/main/";
+    static String vuePath = "admin/src/views/main/";
     static String serverPath = "[module]/src/main/java/top/yuanql/train/[module]/";
 
     static String pomPath = "generator/pom.xml";
@@ -83,14 +83,14 @@ public class ServerGenerator {
         param.put("readOnly", readOnly);
         System.out.println("param = " + param);
 
-//        gen(Domain, param, "service/Impl", "serviceImpl");
-//        gen(Domain, param, "service", "service");
-//        gen(Domain, param, "controller", "controller");
-//        gen(Domain, param, "req", "saveReq");
-//        gen(Domain, param, "req", "queryReq");
-//        gen(Domain, param, "response", "queryResp");
+        gen(Domain, param, "service/Impl", "serviceImpl");
+        gen(Domain, param, "service", "service");
+        gen(Domain, param, "controller", "controller");
+        gen(Domain, param, "req", "saveReq");
+        gen(Domain, param, "req", "queryReq");
+        gen(Domain, param, "response", "queryResp");
 
-//        genVue(do_main, param);
+        genVue(do_main, param);
     }
 
     private static void genVue(String do_main, Map<String, Object> param) throws IOException, TemplateException {
