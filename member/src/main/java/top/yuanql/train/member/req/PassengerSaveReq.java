@@ -6,23 +6,45 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Date;
 
 public class PassengerSaveReq {
+
+    /**
+     * id
+     */
     private Long id;
 
+    /**
+     * 会员id
+     */
     private Long memberId;
 
-    @NotBlank(message = "【名字】不能为空")
+    /**
+     * 姓名
+     */
+    @NotBlank(message = "【姓名】不能为空")
     private String name;
 
+    /**
+     * 身份证
+     */
     @NotBlank(message = "【身份证】不能为空")
     private String idCard;
 
+    /**
+     * 旅客类型|枚举[PassengerTypeEnum]
+     */
     @NotBlank(message = "【旅客类型】不能为空")
     private String type;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    /**
+     * 新增时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    /**
+     * 修改时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
 
     public Long getId() {
