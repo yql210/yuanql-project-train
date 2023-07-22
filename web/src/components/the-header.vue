@@ -1,7 +1,10 @@
 <template>
   <a-layout-header class="header">
-    <div class="logo" />
-    <div style="float: right; color: white">
+    <div class="logo" >
+      <router-link to="/welcome" style="color: white; font-size: 18px">
+        Yuanql 12306
+      </router-link>
+    </div>    <div style="float: right; color: white">
       您好：{{member.mobile}} &nbsp;&nbsp;
       <router-link to="/login" style="color: white">
         退出登录
@@ -56,5 +59,11 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.logo {
+  float: left;
+  height: 31px;
+  width: 150px;
+  color: white;
+  font-size: 20px;
+}
 </style>
