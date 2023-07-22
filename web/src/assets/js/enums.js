@@ -1,1 +1,1 @@
-PASSENGER_TYPE_ARRAY=[{key: "1", value: "成人"}, {key: "2", value: "儿童"}, {key: "3", value: "学生"},];
+PASSENGER_TYPE_ARRAY=[{code: "1", desc: "成人"}, {code: "2", desc: "儿童"}, {code: "3", desc: "学生"},];
