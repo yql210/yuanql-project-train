@@ -2,16 +2,17 @@
   <p>
     <a-space>
       <a-button type="primary" @click="handleQuery()">刷新</a-button>
-      <a-button type="primary" @click="onAdd">新增</a-button>
+      <#if !readOnly><a-button type="primary" @click="onAdd">新增</a-button></#if>
     </a-space>
   </p>
-  <a-table :dataSource="passengers"
+  <a-table :dataSource="${domain}s"
            :columns="columns"
            :pagination="pagination"
            @change="handleTableChange"
            :loading="loading">
     <template #bodyCell="{ column, record }">
       <template v-if="column.dataIndex === 'operation'">
+        <#if !readOnly>
         <a-space>
           <a-popconfirm
               title="删除后不可恢复，确认删除?"
@@ -21,34 +22,51 @@
           </a-popconfirm>
           <a @click="onEdit(record)">编辑</a>
         </a-space>
+        </#if>
       </template>
-      <template v-else-if="column.dataIndex === 'type'">
-        <span v-for="item in PASSENGER_TYPE_ARRAY" :key="item.key">
-          <span v-if="item.key === record.type">
+      <#list fieldList as field>
+        <#if field.enums>
+      <template v-else-if="column.dataIndex === '${field.nameHump}'">
+        <span v-for="item in ${field.enumsConst}_ARRAY" :key="item.key">
+          <span v-if="item.key === record.${field.nameHump}">
             {{item.value}}
           </span>
         </span>
       </template>
+        </#if>
+      </#list>
     </template>
   </a-table>
-  <a-modal v-model:visible="visible" title="乘车人" @ok="handleOk"
+  <#if !readOnly>
+  <a-modal v-model:visible="visible" title="${tableNameCn}" @ok="handleOk"
            ok-text="确认" cancel-text="取消">
-    <a-form :model="passenger" :label-col="{span: 4}" :wrapper-col="{ span: 20 }">
-      <a-form-item label="姓名">
-        <a-input v-model:value="passenger.name" />
-      </a-form-item>
-      <a-form-item label="身份证">
-        <a-input v-model:value="passenger.idCard" />
-      </a-form-item>
-      <a-form-item label="旅客类型">
-        <a-select v-model:value="passenger.type">
-          <a-select-option v-for="item in PASSENGER_TYPE_ARRAY" :key="item.key" :value="item.key">
+    <a-form :model="${domain}" :label-col="{span: 4}" :wrapper-col="{ span: 20 }">
+      <#list fieldList as field>
+        <#if field.name!="id" && field.nameHump!="createTime" && field.nameHump!="updateTime">
+      <a-form-item label="${field.nameCn}">
+        <#if field.enums>
+        <a-select v-model:value="${domain}.${field.nameHump}">
+          <a-select-option v-for="item in ${field.enumsConst}_ARRAY" :key="item.key" :value="item.key">
             {{item.value}}
           </a-select-option>
         </a-select>
+        <#elseif field.javaType=='Date'>
+          <#if field.type=='time'>
+        <a-time-picker v-model:value="${domain}.${field.nameHump}" valueFormat="HH:mm:ss" placeholder="请选择时间" />
+          <#elseif field.type=='date'>
+        <a-date-picker v-model:value="${domain}.${field.nameHump}" valueFormat="YYYY-MM-DD" placeholder="请选择日期" />
+          <#else>
+        <a-date-picker v-model:value="${domain}.${field.nameHump}" valueFormat="YYYY-MM-DD HH:mm:ss" show-time placeholder="请选择日期" />
+          </#if>
+        <#else>
+        <a-input v-model:value="${domain}.${field.nameHump}" />
+        </#if>
       </a-form-item>
+        </#if>
+      </#list>
     </a-form>
   </a-modal>
+  </#if>
 </template>
 
 <script>
@@ -57,20 +75,20 @@ import {notification} from "ant-design-vue";
 import axios from "axios";
 
 export default defineComponent({
-  name: "train-passenger-view",
+  name: "train-${do_main}-view",
   setup() {
-    const PASSENGER_TYPE_ARRAY = window.PASSENGER_TYPE_ARRAY;
+    <#list fieldList as field>
+    <#if field.enums>
+    const ${field.enumsConst}_ARRAY = window.${field.enumsConst}_ARRAY;
+    </#if>
+    </#list>
     const visible = ref(false);
-    let passenger = ref({
-      id: undefined,
-      memberId: undefined,
-      name: undefined,
-      idCard: undefined,
-      type: undefined,
-      createTime: undefined,
-      updateTime: undefined,
+    let ${domain} = ref({
+      <#list fieldList as field>
+      ${field.nameHump}: undefined,
+      </#list>
     });
-    const passengers = ref([]);
+    const ${domain}s = ref([]);
     // 分页的三个属性名是固定的
     const pagination = ref({
       total: 0,
@@ -79,44 +97,36 @@ export default defineComponent({
     });
     let loading = ref(false);
     const columns = [
+    <#list fieldList as field>
+      <#if field.name!="id" && field.nameHump!="createTime" && field.nameHump!="updateTime">
     {
-      title: '会员id',
-      dataIndex: 'memberId',
-      key: 'memberId',
+      title: '${field.nameCn}',
+      dataIndex: '${field.nameHump}',
+      key: '${field.nameHump}',
     },
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '身份证',
-      dataIndex: 'idCard',
-      key: 'idCard',
-    },
-    {
-      title: '旅客类型',
-      dataIndex: 'type',
-      key: 'type',
-    },
+      </#if>
+    </#list>
+    <#if !readOnly>
     {
       title: '操作',
       dataIndex: 'operation'
     }
+    </#if>
     ];
 
+    <#if !readOnly>
     const onAdd = () => {
-      passenger.value = {};
+      ${domain}.value = {};
       visible.value = true;
     };
 
     const onEdit = (record) => {
-      passenger.value = window.Tool.copy(record);
+      ${domain}.value = window.Tool.copy(record);
       visible.value = true;
     };
 
     const onDelete = (record) => {
-      axios.delete("/member/passenger/delete/" + record.id).then((response) => {
+      axios.delete("/${module}/${do_main}/delete/" + record.id).then((response) => {
         const data = response.data;
         if (data.success) {
           notification.success({description: "删除成功！"});
@@ -131,7 +141,7 @@ export default defineComponent({
     };
 
     const handleOk = () => {
-      axios.post("/member/passenger/save", passenger.value).then((response) => {
+      axios.post("/${module}/${do_main}/save", ${domain}.value).then((response) => {
         let data = response.data;
         if (data.success) {
           notification.success({description: "保存成功！"});
@@ -145,6 +155,7 @@ export default defineComponent({
         }
       });
     };
+    </#if>
 
     const handleQuery = (param) => {
       if (!param) {
@@ -154,7 +165,7 @@ export default defineComponent({
         };
       }
       loading.value = true;
-      axios.get("/member/passenger/query-list", {
+      axios.get("/${module}/${do_main}/query-list", {
         params: {
           page: param.page,
           size: param.size
@@ -163,7 +174,7 @@ export default defineComponent({
         loading.value = false;
         let data = response.data;
         if (data.success) {
-          passengers.value = data.content.list;
+          ${domain}s.value = data.content.list;
           // 设置分页控件的值
           pagination.value.current = param.page;
           pagination.value.total = data.content.total;
@@ -190,19 +201,25 @@ export default defineComponent({
     });
 
     return {
-      PASSENGER_TYPE_ARRAY,
-      passenger,
+      <#list fieldList as field>
+      <#if field.enums>
+      ${field.enumsConst}_ARRAY,
+      </#if>
+      </#list>
+      ${domain},
       visible,
-      passengers,
+      ${domain}s,
       pagination,
       columns,
       handleTableChange,
       handleQuery,
       loading,
+      <#if !readOnly>
       onAdd,
       handleOk,
       onEdit,
       onDelete
+      </#if>
     };
   },
 });
