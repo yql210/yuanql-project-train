@@ -1,5 +1,6 @@
 package top.yuanql.train.generator.server;
 
+import freemarker.template.TemplateException;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
@@ -7,11 +8,13 @@ import org.dom4j.io.SAXReader;
 import top.yuanql.train.generator.util.FreemarkerUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ServerGenerator {
-    static String serverPath = "[module]/src/main/java/top/yuanql/train/[module]/service/Impl/";
+
+    static String serverPath = "[module]/src/main/java/top/yuanql/train/[module]/";
 
     static String pomPath = "generator/pom.xml";
 
@@ -53,10 +56,20 @@ public class ServerGenerator {
         param.put("module", module);
         param.put("Domain", Domain);
         param.put("domain", domain);
+        param.put("do_main", do_main);
         System.out.println("param = " + param);
 
-        FreemarkerUtil.initConfig("service.ftl");
-        FreemarkerUtil.generator(serverPath + Domain + "serviceImpl.java", param);
+        gen(Domain, param, "serviceImpl");
+        gen(Domain, param, "controller");
+    }
+
+    private static void gen(String Domain, Map<String, Object> param, String target) throws IOException, TemplateException {
+        FreemarkerUtil.initConfig(target + ".ftl");
+        String toPath = serverPath + target + "/";
+        new File(toPath).mkdirs();
+        String Target = target.substring(0, 1).toUpperCase() + target.substring(1);
+        String fileName = toPath + Domain + Target + ".java";
+        FreemarkerUtil.generator(fileName, param);
     }
 
     private static String getGeneratorPath() throws DocumentException {
