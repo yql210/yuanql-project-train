@@ -1,0 +1,22 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /business   # 添加此内容，需要在每次访问的时候在端口后添加此内容，方便进行路由转发。单机版可加，可不加
+
+
+spring:
+  application:
+    name: yuanql-rain-membner
+  datasource:
+    url: jdbc:mysql://sh-cynosdbmysql-grp-ny3vckj6.sql.tencentcdb.com:26886/train_business?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: train
+    password: neuNEU210
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# mybatis xml 路径
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+
+logging:
+  level:
+    top.yuanql.train.member.mapper: trace

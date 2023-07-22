@@ -1,0 +1,12 @@
+${AnsiColor.BRIGHT_BLUE}
+     d88b db    db .d8888. d888888b   d8888b.  .d88b.    d888888b d888888b db
+     `8P' 88    88 88'  YP `~~88~~'   88  `8D .8P  Y8.     `88'   `~~88~~' 88
+      88  88    88 `8bo.      88      88   88 88    88      88       88    YP
+      88  88    88   `Y8b.    88      88   88 88    88      88       88
+  db. 88  88b  d88 db   8D    88      88  .8D `8b  d8'     .88.      88    db
+  Y8888P  ~Y8888P' `8888Y'    YP      Y8888D'  `Y88P'    Y888888P    YP    YP
+${AnsiColor.BRIGHT_GREEN}
+YuanqlProjectMember Version ： 0.0.1
+Spring Boot Version : ${spring-boot.version}  ${spring-boot.formatted-version}
+Application Version : ${application.title} ${application.formatted-version}
+${AnsiColor.DEFAULT}
