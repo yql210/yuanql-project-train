@@ -60,15 +60,20 @@ public class ServerGenerator {
         System.out.println("param = " + param);
 
         gen(Domain, param, "serviceImpl");
+        gen(Domain, param, "service");
         gen(Domain, param, "controller");
     }
 
     private static void gen(String Domain, Map<String, Object> param, String target) throws IOException, TemplateException {
         FreemarkerUtil.initConfig(target + ".ftl");
         String toPath = serverPath + target + "/";
+        if ("serviceImpl".equals(target)) {
+            toPath = serverPath + "/service/Impl/";
+        }
         new File(toPath).mkdirs();
         String Target = target.substring(0, 1).toUpperCase() + target.substring(1);
         String fileName = toPath + Domain + Target + ".java";
+        System.out.println("开始生成：" + fileName);
         FreemarkerUtil.generator(fileName, param);
     }
 
