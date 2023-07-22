@@ -1,4 +1,4 @@
-package top.yuanql.train.generator.server;
+package top.yuanql.train.generator.gen;
 
 import freemarker.template.TemplateException;
 import org.dom4j.Document;
