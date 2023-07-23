@@ -50,8 +50,16 @@ public class TrainStationServiceImpl implements TrainStationService {
     @Override
     public PageResp<TrainStationQueryResp> querList(TrainStationQueryReq req) {
         TrainStationExample trainStationExample = new TrainStationExample();
-        trainStationExample.setOrderByClause("id desc");
+        trainStationExample.setOrderByClause("train_code asc, `index` asc");
         TrainStationExample.Criteria criteria = trainStationExample.createCriteria();
+
+        if (ObjectUtil.isNotEmpty(req.getTrainCode())) {
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        }
+
+//        if (ObjectUtil.isNotNull(req.getMemberId())) {
+//            criteria.andMemberIdEqualTo(req.getMemberId());
+//        }
 
         LOG.info("查询页码：{}", req.getPage());
         LOG.info("每页条数：{}", req.getSize());
