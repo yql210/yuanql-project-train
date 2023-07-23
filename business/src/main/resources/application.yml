@@ -19,4 +19,4 @@ mybatis:
 
 logging:
   level:
-    top.yuanql.train.member.mapper: trace
+    top.yuanql.train.business.mapper: trace
