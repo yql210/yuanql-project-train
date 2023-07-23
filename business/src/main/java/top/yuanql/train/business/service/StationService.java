@@ -5,6 +5,8 @@ import top.yuanql.train.business.req.StationQueryReq;
 import top.yuanql.train.business.req.StationSaveReq;
 import top.yuanql.train.business.response.StationQueryResp;
 
+import java.util.List;
+
 
 public interface StationService {
 
@@ -13,4 +15,7 @@ public interface StationService {
     public PageResp<StationQueryResp> querList(StationQueryReq req);
 
     void delete(Long id);
+
+    public List<StationQueryResp> querAll();
+
 }
