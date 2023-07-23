@@ -1,4 +1,4 @@
-package top.yuanql.train.${module}.controller;
+package top.yuanql.train.${module}.controller.admin;
 
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -13,8 +13,8 @@ import top.yuanql.train.${module}.service.${Domain}Service;
 
 
 @RestController
-@RequestMapping("/${do_main}")
-public class ${Domain}Controller {
+@RequestMapping("/admin/${do_main}")
+public class ${Domain}AdminController {
 
     @Resource
     private ${Domain}Service ${domain}Service;

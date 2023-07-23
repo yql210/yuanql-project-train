@@ -1,4 +1,4 @@
-package top.yuanql.train.business.controller;
+package top.yuanql.train.business.controller.admin;
 
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -13,8 +13,8 @@ import top.yuanql.train.business.service.StationService;
 
 
 @RestController
-@RequestMapping("/station")
-public class StationController {
+@RequestMapping("/admin/station")
+public class StationAdminController {
 
     @Resource
     private StationService stationService;

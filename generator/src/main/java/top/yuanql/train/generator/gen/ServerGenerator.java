@@ -85,7 +85,7 @@ public class ServerGenerator {
 
         gen(Domain, param, "service/Impl", "serviceImpl");
         gen(Domain, param, "service", "service");
-        gen(Domain, param, "controller", "controller");
+        gen(Domain, param, "controller/admin", "adminController");
         gen(Domain, param, "req", "saveReq");
         gen(Domain, param, "req", "queryReq");
         gen(Domain, param, "response", "queryResp");
