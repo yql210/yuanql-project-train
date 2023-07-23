@@ -3,13 +3,14 @@ package top.yuanql.train.business.controller.admin;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import top.yuanql.train.common.context.LoginMemberContext;
-import top.yuanql.train.common.response.CommonResp;
-import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.business.req.TrainQueryReq;
 import top.yuanql.train.business.req.TrainSaveReq;
 import top.yuanql.train.business.response.TrainQueryResp;
 import top.yuanql.train.business.service.TrainService;
+import top.yuanql.train.common.response.CommonResp;
+import top.yuanql.train.common.response.PageResp;
+
+import java.util.List;
 
 
 @RestController
@@ -35,5 +36,11 @@ public class TrainAdminController {
     public CommonResp<Object> delete(@PathVariable Long id) {
         trainService.delete(id);
         return new CommonResp<>();
+    }
+
+    @GetMapping("/query-all")
+    public CommonResp<List<TrainQueryResp>> queryList() {
+        List<TrainQueryResp> trainQueryResps = trainService.querAll();
+        return new CommonResp<>(trainQueryResps);
     }
 }

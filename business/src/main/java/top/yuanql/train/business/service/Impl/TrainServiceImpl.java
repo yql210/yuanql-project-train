@@ -74,4 +74,17 @@ public class TrainServiceImpl implements TrainService {
     public void delete(Long id) {
         trainMapper.deleteByPrimaryKey(id);
     }
+
+
+    @Override
+    public List<TrainQueryResp> querAll() {
+        TrainExample trainExample = new TrainExample();
+        trainExample.setOrderByClause("code desc");
+
+        List<Train> trainList = trainMapper.selectByExample(trainExample);
+
+        List<TrainQueryResp> trainQueryResps = BeanUtil.copyToList(trainList, TrainQueryResp.class);
+        return trainQueryResps;
+    }
+
 }
