@@ -21,11 +21,11 @@ public class ${Domain}SaveReq {
      */
     <#if field.javaType=='Date'>
         <#if field.type=='time'>
-    @JsonFormat(pattern = "HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "HH:mm:ss")
         <#elseif field.type=='date'>
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd")
         <#else>
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         </#if>
     </#if>
     <#if field.name!="id" && field.nameHump!="createdAt" && field.nameHump!="updatedAt">
