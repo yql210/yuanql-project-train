@@ -31,19 +31,20 @@
         <a-input v-model:value="station.name" />
       </a-form-item>
       <a-form-item label="站名拼音">
-        <a-input v-model:value="station.namePinyin" />
+        <a-input v-model:value="station.namePinyin" disabled/>
       </a-form-item>
-      <a-form-item label="站名拼音首字母">
-        <a-input v-model:value="station.namePy" />
+      <a-form-item label="拼音首字母">
+        <a-input v-model:value="station.namePy" disabled/>
       </a-form-item>
     </a-form>
   </a-modal>
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue';
+import {defineComponent, ref, onMounted, watch} from 'vue';
 import {notification} from "ant-design-vue";
 import axios from "axios";
+import {pinyin} from "pinyin-pro";
 
 export default defineComponent({
   name: "train-station-view",
@@ -86,6 +87,13 @@ export default defineComponent({
       dataIndex: 'operation'
     }
     ];
+
+    watch(() => station.value.name, ()=>{
+      if (Tool.isNotEmpty(station.value.name)) {
+        station.value.namePinyin = pinyin(station.value.name, { toneType: 'none'}).replaceAll(" ", "");
+        station.value.namePy = pinyin(station.value.name, { pattern: 'first', toneType: 'none'}).replaceAll(" ", "");
+      }
+    }, {immediate: true});
 
     const onAdd = () => {
       station.value = {};
