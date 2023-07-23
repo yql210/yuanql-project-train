@@ -2,6 +2,7 @@ package top.yuanql.train.generator.gen;
 
 
 import cn.hutool.core.util.StrUtil;
+import top.yuanql.train.business.enums.SeatColEnum;
 import top.yuanql.train.business.enums.SeatTypeEnum;
 import top.yuanql.train.business.enums.TrainTypeEnum;
 import top.yuanql.train.member.enums.PassengerTypeEnum;
@@ -27,7 +28,7 @@ public class EnumGenerator {
             toJson(PassengerTypeEnum.class, bufferObject, bufferArray);
             toJson(TrainTypeEnum.class, bufferObject, bufferArray);
             toJson(SeatTypeEnum.class, bufferObject, bufferArray);
-//            toJson(SeatColEnum.class, bufferObject, bufferArray);
+            toJson(SeatColEnum.class, bufferObject, bufferArray);
 //            toJson(ConfirmOrderStatusEnum.class, bufferObject, bufferArray);
 
             StringBuffer buffer = bufferObject.append("\r\n").append(bufferArray);
