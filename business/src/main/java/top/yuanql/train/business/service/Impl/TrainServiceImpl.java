@@ -79,7 +79,7 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public List<TrainQueryResp> querAll() {
         TrainExample trainExample = new TrainExample();
-        trainExample.setOrderByClause("code desc");
+        trainExample.setOrderByClause("code asc");
 
         List<Train> trainList = trainMapper.selectByExample(trainExample);
 
