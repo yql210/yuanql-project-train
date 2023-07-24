@@ -41,10 +41,8 @@ public class StationServiceImpl implements StationService {
         if (ObjectUtil.isNull(station.getId())) {
 
             // 保存之前，先校验唯一键是否存在
-            StationExample stationExample = new StationExample();
-            stationExample.createCriteria().andNameEqualTo(stationSaveReq.getName());
-            List<Station> list = stationMapper.selectByExample(stationExample);
-            if (CollUtil.isNotEmpty(list)) {
+            Station stationDB = selectBuUnique(stationSaveReq.getName());
+            if (ObjectUtil.isNotEmpty(stationDB)) {
                 throw new BusinessException(BusinessExceptionEnum.BUSINESS_STATION_NAME_UNIQUE_ERROR);
             }
 
@@ -57,6 +55,16 @@ public class StationServiceImpl implements StationService {
             stationMapper.updateByPrimaryKey(station);
 
         }
+    }
+
+    private Station selectBuUnique(String name) {
+        StationExample stationExample = new StationExample();
+        stationExample.createCriteria().andNameEqualTo(name);
+        List<Station> list = stationMapper.selectByExample(stationExample);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override
