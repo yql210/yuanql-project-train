@@ -17,7 +17,7 @@ import org.quartz.JobExecutionException;
 
 
 @DisallowConcurrentExecution // 禁用并发执行
-public class TestJob implements Job {
+public class Test3Job implements Job {
 
     private void test() {
         // 增加分布式锁，解决集群问题
@@ -26,12 +26,12 @@ public class TestJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        System.out.println("TestJob  ===== test开始");
+        System.out.println("TestJob33333333333  ===== test开始");
 //        try {
 //            Thread.sleep(3000);
 //        } catch (InterruptedException e) {
 //            throw new RuntimeException(e);
 //        }
-        System.out.println("TestJob  ===== test结束");
+        System.out.println("TestJob333333333333333333  ===== test结束");
     }
 }
