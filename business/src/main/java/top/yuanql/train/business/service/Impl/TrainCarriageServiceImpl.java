@@ -1,6 +1,7 @@
 package top.yuanql.train.business.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
@@ -10,16 +11,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
-import top.yuanql.train.business.enums.SeatColEnum;
-import top.yuanql.train.common.response.PageResp;
-import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.business.domain.TrainCarriage;
 import top.yuanql.train.business.domain.TrainCarriageExample;
+import top.yuanql.train.business.enums.SeatColEnum;
 import top.yuanql.train.business.mapper.TrainCarriageMapper;
 import top.yuanql.train.business.req.TrainCarriageQueryReq;
 import top.yuanql.train.business.req.TrainCarriageSaveReq;
 import top.yuanql.train.business.response.TrainCarriageQueryResp;
 import top.yuanql.train.business.service.TrainCarriageService;
+import top.yuanql.train.common.exception.BusinessException;
+import top.yuanql.train.common.exception.BusinessExceptionEnum;
+import top.yuanql.train.common.response.PageResp;
+import top.yuanql.train.common.util.SnowUtil;
 
 import java.util.List;
 
@@ -43,6 +46,14 @@ public class TrainCarriageServiceImpl implements TrainCarriageService {
 
         TrainCarriage trainCarriage = BeanUtil.copyProperties(trainCarriageSaveReq, TrainCarriage.class);
         if (ObjectUtil.isNull(trainCarriage.getId())) {
+
+            // 保存之前，先校验唯一键是否存在
+            TrainCarriage trainCarriageDB = selectBuUnique(trainCarriageSaveReq.getTrainCode(), trainCarriageSaveReq.getIndex());
+
+            if (ObjectUtil.isNotEmpty(trainCarriageDB)) {
+                throw new BusinessException(BusinessExceptionEnum.BUSINESS_TRAIN_CARRIAGE_INDEX_UNIQUE_ERROR);
+            }
+
             trainCarriage.setId(SnowUtil.getSnowflakeNextId());
             trainCarriage.setCreateTime(now);
             trainCarriage.setUpdateTime(now);
@@ -52,6 +63,18 @@ public class TrainCarriageServiceImpl implements TrainCarriageService {
             trainCarriageMapper.updateByPrimaryKey(trainCarriage);
 
         }
+    }
+
+    private TrainCarriage selectBuUnique(String trainCode, Integer index) {
+        TrainCarriageExample trainCarriageExample = new TrainCarriageExample();
+        trainCarriageExample.createCriteria()
+                .andTrainCodeEqualTo(trainCode)
+                .andIndexEqualTo(index);
+        List<TrainCarriage> list = trainCarriageMapper.selectByExample(trainCarriageExample);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override

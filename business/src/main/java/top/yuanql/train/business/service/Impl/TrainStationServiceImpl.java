@@ -1,6 +1,7 @@
 package top.yuanql.train.business.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
@@ -17,6 +18,8 @@ import top.yuanql.train.business.req.TrainStationQueryReq;
 import top.yuanql.train.business.req.TrainStationSaveReq;
 import top.yuanql.train.business.response.TrainStationQueryResp;
 import top.yuanql.train.business.service.TrainStationService;
+import top.yuanql.train.common.exception.BusinessException;
+import top.yuanql.train.common.exception.BusinessExceptionEnum;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
 
@@ -36,6 +39,17 @@ public class TrainStationServiceImpl implements TrainStationService {
         DateTime now = DateTime.now();
         TrainStation trainStation = BeanUtil.copyProperties(trainStationSaveReq, TrainStation.class);
         if (ObjectUtil.isNull(trainStation.getId())) {
+
+            // 保存之前，先校验唯一键是否存在
+            TrainStation trainStationDB = selectBuUnique(trainStationSaveReq.getTrainCode(), trainStationSaveReq.getIndex());
+            if (ObjectUtil.isNotEmpty(trainStationDB)) {
+                throw new BusinessException(BusinessExceptionEnum.BUSINESS_TRAIN_STATION_INDEX_UNIQUE_ERROR);
+            }
+            trainStationDB = selectBuUnique(trainStationSaveReq.getTrainCode(), trainStationSaveReq.getName());
+            if (ObjectUtil.isNotEmpty(trainStationDB)) {
+                throw new BusinessException(BusinessExceptionEnum.BUSINESS_TRAIN_STATION_NAME_UNIQUE_ERROR);
+            }
+
             trainStation.setId(SnowUtil.getSnowflakeNextId());
             trainStation.setCreateTime(now);
             trainStation.setUpdateTime(now);
@@ -45,6 +59,30 @@ public class TrainStationServiceImpl implements TrainStationService {
             trainStationMapper.updateByPrimaryKey(trainStation);
 
         }
+    }
+
+    private TrainStation selectBuUnique(String trainCode, Integer index) {
+        TrainStationExample trainStationExample = new TrainStationExample();
+        trainStationExample.createCriteria()
+                .andTrainCodeEqualTo(trainCode)
+                .andIndexEqualTo(index);
+        List<TrainStation> list = trainStationMapper.selectByExample(trainStationExample);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    private TrainStation selectBuUnique(String trainCode, String name) {
+        TrainStationExample trainStationExample = new TrainStationExample();
+        trainStationExample.createCriteria()
+                .andTrainCodeEqualTo(trainCode)
+                .andNameEqualTo(name);
+        List<TrainStation> list = trainStationMapper.selectByExample(trainStationExample);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override
