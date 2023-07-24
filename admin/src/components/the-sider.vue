@@ -2,7 +2,7 @@
   <a-layout-sider width="200" style="background: #fff">
     <a-menu
         v-model:selectedKeys="selectedKeys"
-        :openKeys="['batch', 'base']"
+        :openKeys="['batch', 'base', 'business']"
         mode="inline"
         style="height: 100%"
     >
@@ -17,6 +17,21 @@
           <user-outlined /> &nbsp;关于
         </router-link>
       </a-menu-item>
+      
+      <a-sub-menu key="business">
+        <template #title>
+          <span>
+            <UnorderedListOutlined />
+            业务管理
+          </span>
+        </template>
+        <a-menu-item key="/business/daily-train">
+          <router-link to="/business/daily-train">
+            <user-outlined /> &nbsp; 每日车次
+          </router-link>
+        </a-menu-item>
+
+      </a-sub-menu>
 
       <a-sub-menu key="base">
         <template #title>
@@ -27,31 +42,30 @@
         </template>
         <a-menu-item key="/base/station">
           <router-link to="/base/station">
-            <MenuUnfoldOutlined /> &nbsp; 车站管理
+            <user-outlined /> &nbsp; 车站管理
           </router-link>
         </a-menu-item>
         <a-menu-item key="/base/train">
           <router-link to="/base/train">
-            <MenuUnfoldOutlined /> &nbsp; 火车管理
+            <user-outlined /> &nbsp; 火车管理
           </router-link>
         </a-menu-item>
         <a-menu-item key="/base/train-station">
           <router-link to="/base/train-station">
-            <MenuUnfoldOutlined /> &nbsp; 火车车站
+            <user-outlined /> &nbsp; 火车车站
           </router-link>
         </a-menu-item>
         <a-menu-item key="/base/train-carriage">
           <router-link to="/base/train-carriage">
-            <MenuUnfoldOutlined /> &nbsp; 火车车厢
+            <user-outlined /> &nbsp; 火车车厢
           </router-link>
         </a-menu-item>
         <a-menu-item key="/base/train-seat">
           <router-link to="/base/train-seat">
-            <MenuUnfoldOutlined /> &nbsp; 火车座位
+            <user-outlined /> &nbsp; 火车座位
           </router-link>
         </a-menu-item>
       </a-sub-menu>
-
 
       <a-sub-menu key="batch">
         <template #title>
