@@ -70,7 +70,7 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public PageResp<TrainQueryResp> querList(TrainQueryReq req) {
         TrainExample trainExample = new TrainExample();
-        trainExample.setOrderByClause("id desc");
+        trainExample.setOrderByClause("code desc");
         TrainExample.Criteria criteria = trainExample.createCriteria();
 
         LOG.info("查询页码：{}", req.getPage());
