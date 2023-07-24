@@ -1,6 +1,7 @@
 package top.yuanql.train.business.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
+import top.yuanql.train.common.exception.BusinessException;
+import top.yuanql.train.common.exception.BusinessExceptionEnum;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.business.domain.Station;
@@ -36,6 +39,15 @@ public class StationServiceImpl implements StationService {
         DateTime now = DateTime.now();
         Station station = BeanUtil.copyProperties(stationSaveReq, Station.class);
         if (ObjectUtil.isNull(station.getId())) {
+
+            // 保存之前，先校验唯一键是否存在
+            StationExample stationExample = new StationExample();
+            stationExample.createCriteria().andNameEqualTo(stationSaveReq.getName());
+            List<Station> list = stationMapper.selectByExample(stationExample);
+            if (CollUtil.isNotEmpty(list)) {
+                throw new BusinessException(BusinessExceptionEnum.BUSINESS_STATION_NAME_UNIQUE_ERROR);
+            }
+
             station.setId(SnowUtil.getSnowflakeNextId());
             station.setCreateTime(now);
             station.setUpdateTime(now);
