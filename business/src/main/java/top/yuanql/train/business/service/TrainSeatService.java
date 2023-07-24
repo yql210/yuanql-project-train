@@ -13,4 +13,6 @@ public interface TrainSeatService {
     public PageResp<TrainSeatQueryResp> querList(TrainSeatQueryReq req);
 
     void delete(Long id);
+
+    public void genTrainSeat(String trainCode);
 }

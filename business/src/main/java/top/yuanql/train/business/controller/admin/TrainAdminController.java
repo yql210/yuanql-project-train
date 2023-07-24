@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import top.yuanql.train.business.req.TrainQueryReq;
 import top.yuanql.train.business.req.TrainSaveReq;
 import top.yuanql.train.business.response.TrainQueryResp;
+import top.yuanql.train.business.service.TrainSeatService;
 import top.yuanql.train.business.service.TrainService;
 import top.yuanql.train.common.response.CommonResp;
 import top.yuanql.train.common.response.PageResp;
@@ -19,6 +20,9 @@ public class TrainAdminController {
 
     @Resource
     private TrainService trainService;
+
+    @Resource
+    private TrainSeatService trainSeatService;
 
     @PostMapping("/save")
     public CommonResp<Object> save(@Valid @RequestBody TrainSaveReq req) {
@@ -42,5 +46,11 @@ public class TrainAdminController {
     public CommonResp<List<TrainQueryResp>> queryList() {
         List<TrainQueryResp> trainQueryResps = trainService.querAll();
         return new CommonResp<>(trainQueryResps);
+    }
+
+    @GetMapping("/gen-seat/{trainCode}")
+    public CommonResp<Object> genSeat(@PathVariable String trainCode) {
+        trainSeatService.genTrainSeat(trainCode);
+        return new CommonResp<>();
     }
 }
