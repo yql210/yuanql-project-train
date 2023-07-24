@@ -28,7 +28,7 @@ public class TestJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         System.out.println("TestJob  ===== test开始");
         try {
-            Thread.sleep(30000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
