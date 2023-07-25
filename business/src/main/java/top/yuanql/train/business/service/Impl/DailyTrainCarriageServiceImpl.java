@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
+import top.yuanql.train.business.enums.SeatColEnum;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.business.domain.DailyTrainCarriage;
@@ -34,6 +35,12 @@ public class DailyTrainCarriageServiceImpl implements DailyTrainCarriageService 
     @Override
     public void save(DailyTrainCarriageSaveReq dailyTrainCarriageSaveReq) {
         DateTime now = DateTime.now();
+
+        // 自动计算出列数和总座位数
+        List<SeatColEnum> seatColEnums = SeatColEnum.getColsByType(dailyTrainCarriageSaveReq.getSeatType());
+        dailyTrainCarriageSaveReq.setColCount(seatColEnums.size());
+        dailyTrainCarriageSaveReq.setSeatCount(dailyTrainCarriageSaveReq.getColCount() * dailyTrainCarriageSaveReq.getRowCount());
+
         DailyTrainCarriage dailyTrainCarriage = BeanUtil.copyProperties(dailyTrainCarriageSaveReq, DailyTrainCarriage.class);
         if (ObjectUtil.isNull(dailyTrainCarriage.getId())) {
             dailyTrainCarriage.setId(SnowUtil.getSnowflakeNextId());
@@ -50,8 +57,15 @@ public class DailyTrainCarriageServiceImpl implements DailyTrainCarriageService 
     @Override
     public PageResp<DailyTrainCarriageQueryResp> querList(DailyTrainCarriageQueryReq req) {
         DailyTrainCarriageExample dailyTrainCarriageExample = new DailyTrainCarriageExample();
-        dailyTrainCarriageExample.setOrderByClause("id desc");
+        dailyTrainCarriageExample.setOrderByClause("date desc, train_code asc, `index` asc");
         DailyTrainCarriageExample.Criteria criteria = dailyTrainCarriageExample.createCriteria();
+        if (ObjectUtil.isNotEmpty(req.getTrainCode())) {
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        }
+        if (ObjectUtil.isNotNull(req.getDate())) {
+            criteria.andDateEqualTo(req.getDate());
+        }
+
 
         LOG.info("查询页码：{}", req.getPage());
         LOG.info("每页条数：{}", req.getSize());
