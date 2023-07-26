@@ -15,7 +15,7 @@ import java.util.*;
 
 public class ServerGenerator {
 
-    static boolean readOnly = false;
+    static boolean readOnly = true;
     static String vuePath = "admin/src/views/main/";
     static String serverPath = "[module]/src/main/java/top/yuanql/train/[module]/";
 
