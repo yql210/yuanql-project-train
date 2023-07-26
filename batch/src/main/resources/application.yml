@@ -6,7 +6,7 @@ server:
 
 spring:
   application:
-    name: yuanql-rain-membner
+    name: yuanql-rain-batch
   datasource:
     url: jdbc:mysql://sh-cynosdbmysql-grp-ny3vckj6.sql.tencentcdb.com:26886/train_batch?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai
     username: train
