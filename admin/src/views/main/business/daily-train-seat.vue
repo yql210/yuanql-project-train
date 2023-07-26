@@ -1,8 +1,8 @@
 <template>
   <p>
     <a-space>
-      <a-button type="primary" @click="handleQuery()">刷新</a-button>
-      
+      <train-select-view v-model="params.trainCode" width="200px"></train-select-view>
+      <a-button type="primary" @click="handleQuery()">查找</a-button>
     </a-space>
   </p>
   <a-table :dataSource="dailyTrainSeats"
@@ -15,7 +15,7 @@
       </template>
       <template v-else-if="column.dataIndex === 'col'">
         <span v-for="item in SEAT_COL_ARRAY" :key="item.code">
-          <span v-if="item.code === record.col">
+          <span v-if="item.code === record.col && item.type === record.seatType">
             {{item.desc}}
           </span>
         </span>
@@ -35,9 +35,11 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import {notification} from "ant-design-vue";
 import axios from "axios";
+import TrainSelectView from "@/components/train-select.vue";
 
 export default defineComponent({
   name: "train-daily-train-seat-view",
+  components: {TrainSelectView},
   setup() {
     const SEAT_COL_ARRAY = window.SEAT_COL_ARRAY;
     const SEAT_TYPE_ARRAY = window.SEAT_TYPE_ARRAY;
@@ -63,6 +65,9 @@ export default defineComponent({
       pageSize: 10,
     });
     let loading = ref(false);
+    let params = ref({
+      trainCode: null,
+    });
     const columns = [
     {
       title: '日期',
@@ -75,7 +80,7 @@ export default defineComponent({
       key: 'trainCode',
     },
     {
-      title: '箱序',
+      title: '厢序',
       dataIndex: 'carriageIndex',
       key: 'carriageIndex',
     },
@@ -95,7 +100,7 @@ export default defineComponent({
       key: 'seatType',
     },
     {
-      title: '同车箱座序',
+      title: '同车厢座序',
       dataIndex: 'carriageSeatIndex',
       key: 'carriageSeatIndex',
     },
@@ -118,7 +123,8 @@ export default defineComponent({
       axios.get("/business/admin/daily-train-seat/query-list", {
         params: {
           page: param.page,
-          size: param.size
+          size: param.size,
+          trainCode: params.value.trainCode
         }
       }).then((response) => {
         loading.value = false;
@@ -161,6 +167,7 @@ export default defineComponent({
       handleTableChange,
       handleQuery,
       loading,
+      params
     };
   },
 });
