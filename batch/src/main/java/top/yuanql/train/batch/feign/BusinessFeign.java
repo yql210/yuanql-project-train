@@ -1,7 +1,12 @@
 package top.yuanql.train.batch.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import top.yuanql.train.common.response.CommonResp;
+
+import java.util.Date;
 
 /**
  * @BelongsProject: yuanql-project-train
@@ -18,5 +23,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface BusinessFeign {
 
     @GetMapping("/hello")
-    public String Hello();
+    String Hello();
+
+    @GetMapping("/admin/daily-train/gen-daily/{date}")
+    CommonResp<Object> genDaily(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date);
 }

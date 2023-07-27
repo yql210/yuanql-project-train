@@ -2,14 +2,16 @@ package top.yuanql.train.business.controller.admin;
 
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-import top.yuanql.train.common.context.LoginMemberContext;
-import top.yuanql.train.common.response.CommonResp;
-import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.business.req.DailyTrainQueryReq;
 import top.yuanql.train.business.req.DailyTrainSaveReq;
 import top.yuanql.train.business.response.DailyTrainQueryResp;
 import top.yuanql.train.business.service.DailyTrainService;
+import top.yuanql.train.common.response.CommonResp;
+import top.yuanql.train.common.response.PageResp;
+
+import java.util.Date;
 
 
 @RestController
@@ -36,4 +38,12 @@ public class DailyTrainAdminController {
         dailyTrainService.delete(id);
         return new CommonResp<>();
     }
+
+    @GetMapping("/gen-daily/{date}")
+    public CommonResp<Object> genDaily(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        dailyTrainService.genDaily(date);
+        return new CommonResp<>();
+    }
+
+
 }

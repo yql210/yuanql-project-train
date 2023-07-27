@@ -1,5 +1,6 @@
 package top.yuanql.train.business.service;
 
+import top.yuanql.train.business.domain.Train;
 import top.yuanql.train.business.req.TrainQueryReq;
 import top.yuanql.train.business.req.TrainSaveReq;
 import top.yuanql.train.business.response.TrainQueryResp;
@@ -18,4 +19,5 @@ public interface TrainService {
 
     public List<TrainQueryResp> querAll();
 
+    public List<Train> selectAll();
     }
