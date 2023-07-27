@@ -42,7 +42,8 @@
       "parser": "@babel/eslint-parser"
     },
     "rules": {
-      "no-undef": 0
+      "no-undef": 0,
+      "vue/no-unused-vars": 0
     }
   },
   "browserslist": [

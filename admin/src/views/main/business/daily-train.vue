@@ -85,6 +85,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 import {notification} from "ant-design-vue";
 import axios from "axios";
 import TrainSelectView from "@/components/train-select.vue";
+import dayjs from "dayjs";
 
 export default defineComponent({
   name: "train-daily-train-view",
@@ -122,6 +123,7 @@ export default defineComponent({
       date: null
     });
     const genDailyVisible = ref(false);
+    const genDailyLoading = ref(false);
     const columns = [
     {
       title: '日期',
@@ -309,7 +311,8 @@ export default defineComponent({
       genDaily,
       genDailyVisible,
       handleGenDailyOk,
-      onClickGenDaily
+      onClickGenDaily,
+      genDailyLoading
     };
   },
 });
