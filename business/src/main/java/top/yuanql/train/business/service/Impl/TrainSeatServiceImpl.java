@@ -13,17 +13,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.yuanql.train.business.config.BusinessApplication;
 import top.yuanql.train.business.domain.TrainCarriage;
-import top.yuanql.train.business.enums.SeatColEnum;
-import top.yuanql.train.business.service.TrainCarriageService;
-import top.yuanql.train.common.response.PageResp;
-import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.business.domain.TrainSeat;
 import top.yuanql.train.business.domain.TrainSeatExample;
+import top.yuanql.train.business.enums.SeatColEnum;
 import top.yuanql.train.business.mapper.TrainSeatMapper;
 import top.yuanql.train.business.req.TrainSeatQueryReq;
 import top.yuanql.train.business.req.TrainSeatSaveReq;
 import top.yuanql.train.business.response.TrainSeatQueryResp;
+import top.yuanql.train.business.service.TrainCarriageService;
 import top.yuanql.train.business.service.TrainSeatService;
+import top.yuanql.train.common.response.PageResp;
+import top.yuanql.train.common.util.SnowUtil;
 
 import java.util.List;
 
@@ -136,5 +136,14 @@ public class TrainSeatServiceImpl implements TrainSeatService {
                 }
             }
         }
+    }
+    @Override
+    public List<TrainSeat> selectByTrainCode(String trainCode) {
+        TrainSeatExample trainSeatExample = new TrainSeatExample();
+        trainSeatExample.setOrderByClause("`id` asc");
+        TrainSeatExample.Criteria criteria = trainSeatExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode);
+
+        return trainSeatMapper.selectByExample(trainSeatExample);
     }
 }

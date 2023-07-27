@@ -1,8 +1,11 @@
 package top.yuanql.train.business.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
@@ -10,16 +13,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
+import top.yuanql.train.business.domain.*;
+import top.yuanql.train.business.service.TrainSeatService;
+import top.yuanql.train.business.service.TrainStationService;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
-import top.yuanql.train.business.domain.DailyTrainSeat;
-import top.yuanql.train.business.domain.DailyTrainSeatExample;
 import top.yuanql.train.business.mapper.DailyTrainSeatMapper;
 import top.yuanql.train.business.req.DailyTrainSeatQueryReq;
 import top.yuanql.train.business.req.DailyTrainSeatSaveReq;
 import top.yuanql.train.business.response.DailyTrainSeatQueryResp;
 import top.yuanql.train.business.service.DailyTrainSeatService;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -30,6 +35,12 @@ public class DailyTrainSeatServiceImpl implements DailyTrainSeatService {
 
     @Resource
     private DailyTrainSeatMapper dailyTrainSeatMapper;
+
+    @Resource
+    private TrainSeatService trainSeatService;
+
+    @Resource
+    private TrainStationService trainStationService;
 
     @Override
     public void save(DailyTrainSeatSaveReq dailyTrainSeatSaveReq) {
@@ -77,5 +88,41 @@ public class DailyTrainSeatServiceImpl implements DailyTrainSeatService {
     @Override
     public void delete(Long id) {
         dailyTrainSeatMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public void genDaily(Date date, String trainCode) {
+        LOG.info("开始生成日期【{}】车次【{}】的座位信息", DateUtil.formatDate(date), trainCode);
+
+        // 删除某日某车次的车站信息
+        DailyTrainSeatExample dailyTrainSeatExample = new DailyTrainSeatExample();
+        dailyTrainSeatExample.createCriteria()
+                .andDateEqualTo(date)
+                .andTrainCodeEqualTo(trainCode);
+
+        dailyTrainSeatMapper.deleteByExample(dailyTrainSeatExample);
+
+        List<TrainStation> trainStations = trainStationService.selectByTrainCode(trainCode);
+        String sell = StrUtil.fillBefore("", '0', trainStations.size() - 1);
+
+        // 生成该车站的数据
+        List<TrainSeat> trainSeats = trainSeatService.selectByTrainCode(trainCode);
+        if (CollUtil.isEmpty(trainSeats)) {
+            LOG.info("该车次没有座位基础数据，生成该车站座位信息结束");
+            return;
+        }
+        for (TrainSeat trainSeat: trainSeats) {
+            DateTime now = DateTime.now();
+
+            DailyTrainSeat dailyTrainSeat = BeanUtil.copyProperties(trainSeat, DailyTrainSeat.class);
+            dailyTrainSeat.setId(SnowUtil.getSnowflakeNextId());
+
+            dailyTrainSeat.setCreateTime(now);
+            dailyTrainSeat.setUpdateTime(now);
+            dailyTrainSeat.setDate(date);
+            dailyTrainSeat.setSell(sell);
+            dailyTrainSeatMapper.insert(dailyTrainSeat);
+        }
+        LOG.info("结束生成日期【{}】车次【{}】的座位信息", DateUtil.formatDate(date), trainCode);
     }
 }

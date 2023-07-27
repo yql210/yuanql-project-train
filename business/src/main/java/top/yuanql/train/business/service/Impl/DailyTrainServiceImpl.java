@@ -19,10 +19,7 @@ import top.yuanql.train.business.mapper.DailyTrainMapper;
 import top.yuanql.train.business.req.DailyTrainQueryReq;
 import top.yuanql.train.business.req.DailyTrainSaveReq;
 import top.yuanql.train.business.response.DailyTrainQueryResp;
-import top.yuanql.train.business.service.DailyTrainCarriageService;
-import top.yuanql.train.business.service.DailyTrainService;
-import top.yuanql.train.business.service.DailyTrainStationService;
-import top.yuanql.train.business.service.TrainService;
+import top.yuanql.train.business.service.*;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
 
@@ -46,6 +43,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
     @Resource
     private DailyTrainCarriageService dailyTrainCarriageService;
+
+    @Resource
+    private DailyTrainSeatService dailyTrainSeatService;
 
     @Override
     public void save(DailyTrainSaveReq dailyTrainSaveReq) {
@@ -142,6 +142,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
         // 生成该车次的车厢数据
         dailyTrainCarriageService.genDaily(date, train.getCode());
+
+        // 生成该车次的座位数据
+        dailyTrainSeatService.genDaily(date, train.getCode());
 
 
         LOG.info("结束生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date), train.getCode());
