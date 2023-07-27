@@ -5,6 +5,7 @@
       <train-select-view v-model="params.code" width="200px"></train-select-view>
       <a-button type="primary" @click="handleQuery()">查找</a-button>
       <a-button type="primary" @click="onAdd">新增</a-button>
+      <a-button type="danger" @click="onClickGenDaily">手动生成车次信息</a-button>
     </a-space>
   </p>
   <a-table :dataSource="dailyTrains"
@@ -69,6 +70,14 @@
       </a-form-item>
     </a-form>
   </a-modal>
+  <a-modal v-model:visible="genDailyVisible" title="生成车次" @ok="handleGenDailyOk"
+           :confirm-loading="genDailyLoading" ok-text="确认" cancel-text="取消">
+    <a-form :model="genDaily" :label-col="{span: 4}" :wrapper-col="{ span: 20 }">
+      <a-form-item label="日期">
+        <a-date-picker v-model:value="genDaily.date" placeholder="请选择日期"/>
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <script>
@@ -109,6 +118,10 @@ export default defineComponent({
       code: null,
       date: null
     });
+    const genDaily = ref({
+      date: null
+    });
+    const genDailyVisible = ref(false);
     const columns = [
     {
       title: '日期',
@@ -248,6 +261,28 @@ export default defineComponent({
       dailyTrain.value = Object.assign(dailyTrain.value, t);
     };
 
+    const onClickGenDaily = () => {
+      genDailyVisible.value = true;
+    };
+
+    const handleGenDailyOk = () => {
+      let date = dayjs(genDaily.value.date).format("YYYY-MM-DD");
+      genDailyLoading.value = true;
+      axios.get("/business/admin/daily-train/gen-daily/" + date).then((response) => {
+        let data = response.data;
+        if (data.success) {
+          notification.success({description: "生成成功！"});
+          genDailyVisible.value = false;
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize
+          });
+        } else {
+          notification.error({description: data.message});
+        }
+      });
+    };
+
     onMounted(() => {
       handleQuery({
         page: 1,
@@ -270,7 +305,11 @@ export default defineComponent({
       onEdit,
       onDelete,
       onChangeCode,
-      params
+      params,
+      genDaily,
+      genDailyVisible,
+      handleGenDailyOk,
+      onClickGenDaily
     };
   },
 });
