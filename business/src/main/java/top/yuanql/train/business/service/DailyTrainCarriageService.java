@@ -5,6 +5,8 @@ import top.yuanql.train.business.req.DailyTrainCarriageQueryReq;
 import top.yuanql.train.business.req.DailyTrainCarriageSaveReq;
 import top.yuanql.train.business.response.DailyTrainCarriageQueryResp;
 
+import java.util.Date;
+
 
 public interface DailyTrainCarriageService {
 
@@ -13,4 +15,7 @@ public interface DailyTrainCarriageService {
     public PageResp<DailyTrainCarriageQueryResp> querList(DailyTrainCarriageQueryReq req);
 
     void delete(Long id);
+
+    void genDaily(Date date, String trainCode);
+
 }
