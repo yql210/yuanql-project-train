@@ -18,4 +18,6 @@ public interface DailyTrainSeatService {
 
     void genDaily(Date date, String trainCode);
 
+    public int countSeat(Date date, String trainCode, String seatType);
+
 }

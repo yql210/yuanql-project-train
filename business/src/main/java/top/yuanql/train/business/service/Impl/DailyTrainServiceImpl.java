@@ -152,7 +152,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
         dailyTrainSeatService.genDaily(date, train.getCode());
 
         // 生成该车次的座位余票数据
-        trainTicketService.genDailyTrain(date, train.getCode());
+        trainTicketService.genDaily(dailyTrain, date, train.getCode());
 
 
         LOG.info("结束生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date), train.getCode());

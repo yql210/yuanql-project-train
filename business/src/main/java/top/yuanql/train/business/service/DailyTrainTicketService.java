@@ -1,5 +1,6 @@
 package top.yuanql.train.business.service;
 
+import top.yuanql.train.business.domain.DailyTrain;
 import top.yuanql.train.business.req.DailyTrainTicketQueryReq;
 import top.yuanql.train.business.req.DailyTrainTicketSaveReq;
 import top.yuanql.train.business.response.DailyTrainTicketQueryResp;
@@ -16,5 +17,5 @@ public interface DailyTrainTicketService {
 
     void delete(Long id);
 
-    public void genDailyTrain(Date date, String trainCode);
+    public void genDaily(DailyTrain dailyTrain, Date date, String trainCode);
 }
