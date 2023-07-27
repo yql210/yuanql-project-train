@@ -11,6 +11,7 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.yuanql.train.business.config.BusinessApplication;
 import top.yuanql.train.business.domain.DailyTrainStation;
 import top.yuanql.train.business.domain.DailyTrainStationExample;
@@ -91,6 +92,7 @@ public class DailyTrainStationServiceImpl implements DailyTrainStationService {
     }
 
     @Override
+    @Transactional
     public void genDaily(Date date, String trainCode) {
         LOG.info("开始生成日期【{}】车次【{}】的车站信息", DateUtil.formatDate(date), trainCode);
 

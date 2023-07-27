@@ -11,6 +11,7 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.yuanql.train.business.config.BusinessApplication;
 import top.yuanql.train.business.domain.DailyTrain;
 import top.yuanql.train.business.domain.DailyTrainExample;
@@ -46,6 +47,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
     @Resource
     private DailyTrainSeatService dailyTrainSeatService;
+
+    @Resource
+    private DailyTrainTicketService trainTicketService;
 
     @Override
     public void save(DailyTrainSaveReq dailyTrainSaveReq) {
@@ -117,6 +121,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
     }
 
     @Override
+    @Transactional
     public void genDailyTrain(Date date, Train train) {
         LOG.info("开始生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date), train.getCode());
         // 删除改车次已有的数据
@@ -145,6 +150,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
         // 生成该车次的座位数据
         dailyTrainSeatService.genDaily(date, train.getCode());
+
+        // 生成该车次的座位余票数据
+        trainTicketService.genDailyTrain(date, train.getCode());
 
 
         LOG.info("结束生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date), train.getCode());

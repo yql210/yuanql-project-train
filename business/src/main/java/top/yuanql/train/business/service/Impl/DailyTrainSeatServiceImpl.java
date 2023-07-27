@@ -12,17 +12,21 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.yuanql.train.business.config.BusinessApplication;
-import top.yuanql.train.business.domain.*;
-import top.yuanql.train.business.service.TrainSeatService;
-import top.yuanql.train.business.service.TrainStationService;
-import top.yuanql.train.common.response.PageResp;
-import top.yuanql.train.common.util.SnowUtil;
+import top.yuanql.train.business.domain.DailyTrainSeat;
+import top.yuanql.train.business.domain.DailyTrainSeatExample;
+import top.yuanql.train.business.domain.TrainSeat;
+import top.yuanql.train.business.domain.TrainStation;
 import top.yuanql.train.business.mapper.DailyTrainSeatMapper;
 import top.yuanql.train.business.req.DailyTrainSeatQueryReq;
 import top.yuanql.train.business.req.DailyTrainSeatSaveReq;
 import top.yuanql.train.business.response.DailyTrainSeatQueryResp;
 import top.yuanql.train.business.service.DailyTrainSeatService;
+import top.yuanql.train.business.service.TrainSeatService;
+import top.yuanql.train.business.service.TrainStationService;
+import top.yuanql.train.common.response.PageResp;
+import top.yuanql.train.common.util.SnowUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -91,6 +95,7 @@ public class DailyTrainSeatServiceImpl implements DailyTrainSeatService {
     }
 
     @Override
+    @Transactional
     public void genDaily(Date date, String trainCode) {
         LOG.info("开始生成日期【{}】车次【{}】的座位信息", DateUtil.formatDate(date), trainCode);
 
