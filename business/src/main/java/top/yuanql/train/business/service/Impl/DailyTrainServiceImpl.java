@@ -3,6 +3,7 @@ package top.yuanql.train.business.service.Impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -11,17 +12,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
-import top.yuanql.train.business.domain.Train;
-import top.yuanql.train.business.service.TrainService;
-import top.yuanql.train.common.response.PageResp;
-import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.business.domain.DailyTrain;
 import top.yuanql.train.business.domain.DailyTrainExample;
+import top.yuanql.train.business.domain.Train;
 import top.yuanql.train.business.mapper.DailyTrainMapper;
 import top.yuanql.train.business.req.DailyTrainQueryReq;
 import top.yuanql.train.business.req.DailyTrainSaveReq;
 import top.yuanql.train.business.response.DailyTrainQueryResp;
 import top.yuanql.train.business.service.DailyTrainService;
+import top.yuanql.train.business.service.DailyTrainStationService;
+import top.yuanql.train.business.service.TrainService;
+import top.yuanql.train.common.response.PageResp;
+import top.yuanql.train.common.util.SnowUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -37,6 +39,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
     @Resource
     private TrainService trainService;
+
+    @Resource
+    private DailyTrainStationService dailyTrainStationService;
 
     @Override
     public void save(DailyTrainSaveReq dailyTrainSaveReq) {
@@ -109,6 +114,7 @@ public class DailyTrainServiceImpl implements DailyTrainService {
 
     @Override
     public void genDailyTrain(Date date, Train train) {
+        LOG.info("开始生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date), train.getCode());
         // 删除改车次已有的数据
         DailyTrainExample dailyTrainExample = new DailyTrainExample();
         dailyTrainExample.createCriteria()
@@ -126,5 +132,9 @@ public class DailyTrainServiceImpl implements DailyTrainService {
         dailyTrain.setUpdateTime(now);
         dailyTrain.setDate(date);
         dailyTrainMapper.insert(dailyTrain);
+
+        // 生成该车次的车站数据
+        dailyTrainStationService.genDaily(date, train.getCode());
+        LOG.info("结束生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date), train.getCode());
     }
 }

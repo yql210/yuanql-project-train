@@ -5,6 +5,8 @@ import top.yuanql.train.business.req.DailyTrainStationQueryReq;
 import top.yuanql.train.business.req.DailyTrainStationSaveReq;
 import top.yuanql.train.business.response.DailyTrainStationQueryResp;
 
+import java.util.Date;
+
 
 public interface DailyTrainStationService {
 
@@ -13,4 +15,6 @@ public interface DailyTrainStationService {
     public PageResp<DailyTrainStationQueryResp> querList(DailyTrainStationQueryReq req);
 
     void delete(Long id);
+
+    void genDaily(Date date, String trainCode);
 }
