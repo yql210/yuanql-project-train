@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.common.context.LoginMemberContext;
+import top.yuanql.train.common.exception.BusinessException;
+import top.yuanql.train.common.exception.BusinessExceptionEnum;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.member.conf.MemberApplication;
@@ -34,6 +36,18 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public void save(PassengerSaveReq passengerSaveReq) {
+
+        // 先判断当前的人数
+        PassengerExample passengerExample = new PassengerExample();
+        passengerExample.createCriteria().andMemberIdEqualTo(LoginMemberContext.getId());
+        long l = passengerMapper.countByExample(passengerExample);
+        LOG.info("当前存在【{}】个用户", l);
+
+        if (l >= 50) {
+            throw new BusinessException(BusinessExceptionEnum.MEMBER_PASSENGER_NUM_SIZE_LIMIT);
+        }
+
+
         DateTime now = DateTime.now();
         Passenger passenger = BeanUtil.copyProperties(passengerSaveReq, Passenger.class);
         if (ObjectUtil.isNull(passenger.getId())) {
