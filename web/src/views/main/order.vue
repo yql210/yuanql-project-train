@@ -99,7 +99,8 @@
 
         <br/>
         最终购票： {{tickets}}
-
+        <br/>
+        最终选座： {{chooseSeatObj}}
 
       </div>
     </a-modal>
@@ -193,7 +194,7 @@ export default defineComponent({
     // }
     const chooseSeatObj = ref({});
     watch(() => SEAT_COL_ARRAY.value, () => {
-      chooseSeatObj.value = {};
+      chooseSeatObj.value = {}; // 先情况，再重新赋值
       for (let i = 1; i <= 2; i++) {
         SEAT_COL_ARRAY.value.forEach((item) => {
           chooseSeatObj.value[item.code + i] = false;
