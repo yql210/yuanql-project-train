@@ -11,6 +11,8 @@ import top.yuanql.train.member.req.PassengerSaveReq;
 import top.yuanql.train.member.response.PassengerQueryResp;
 import top.yuanql.train.member.service.PassengerService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/passenger")
@@ -37,4 +39,11 @@ public class PassengerController {
         passengerService.delete(id);
         return new CommonResp<>();
     }
+
+    @GetMapping("/query-mine")
+    public CommonResp<List<PassengerQueryResp>> queryMine() {
+        List<PassengerQueryResp> passengerQueryResps = passengerService.queryMine();
+        return new CommonResp<>(passengerQueryResps);
+    }
+
 }
