@@ -182,10 +182,33 @@ export default defineComponent({
     const finishCheckPassenger = () => {
       console.log("购票列表：", tickets.value);
 
-      if (tickets.value.length > 5) {
+      if (tickets.value.length > 10) {
         notification.error({description: '最多只能购买5张车票'});
         return;
       }
+
+      // 校验余票是否充足，购票列表中的每个座位类型，都去车次座位余票信息中，看余票是否充足
+      // 前端校验不一定准，但前端校验可以减轻后端很多压力
+      // 注意：这段只是校验，必须copy出seatTypesTemp变量来扣减，用原始的seatTypes去扣减，会影响真实的库存
+      let seatTypesTemp = Tool.copy(seatTypes);
+      for (let i = 0; i < tickets.value.length; i++) {
+        let ticket = tickets.value[i];
+        for (let j = 0; j < seatTypesTemp.length; j++) {
+          let seatType = seatTypesTemp[j];
+          // 同类型座位余票-1，这里扣减的是临时copy出来的库存，不是真正的库存，只是为了校验
+          if (ticket.seatTypeCode === seatType.code) {
+            seatType.count--;
+            if (seatType.count < 0) {
+              notification.error({description: seatType.desc + '余票不足'});
+              return;
+            }
+          }
+        }
+      }
+      console.log("前端余票校验通过");
+
+
+
       // 弹出确认界面
       visible.value = true;
 
