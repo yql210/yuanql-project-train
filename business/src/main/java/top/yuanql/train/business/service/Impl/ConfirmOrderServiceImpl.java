@@ -3,6 +3,7 @@ package top.yuanql.train.business.service.Impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
+import top.yuanql.train.business.enums.ConfirmOrderStatusEnum;
+import top.yuanql.train.common.context.LoginMemberContext;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.business.domain.ConfirmOrder;
@@ -81,6 +84,22 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
 
         // 保存确认订单，状态初始
+        DateTime now = DateTime.now();
+
+        ConfirmOrder confirmOrder = new ConfirmOrder();
+        confirmOrder.setId(SnowUtil.getSnowflakeNextId());
+        confirmOrder.setMemberId(LoginMemberContext.getId());
+        confirmOrder.setDate(confirmOrderSaveReq.getDate());
+        confirmOrder.setTrainCode(confirmOrderSaveReq.getTrainCode());
+        confirmOrder.setStart(confirmOrderSaveReq.getStart());
+        confirmOrder.setEnd(confirmOrderSaveReq.getEnd());
+        confirmOrder.setDailyTrainTicketId(confirmOrderSaveReq.getDailyTrainTicketId());
+        confirmOrder.setStatus(ConfirmOrderStatusEnum.INIT.getCode());
+        confirmOrder.setCreateTime(now);
+        confirmOrder.setUpdateTime(now);
+        confirmOrder.setTickets(JSON.toJSONString(confirmOrderSaveReq.getTickets()));
+
+        confirmOrderMapper.insert(confirmOrder);
 
 
         // 查余票记录，需要得到真实的库存
@@ -112,6 +131,6 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             // 更新确认订单为成功。
 
 
-        
+
     }
 }
