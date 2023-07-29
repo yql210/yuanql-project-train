@@ -2,6 +2,7 @@ package top.yuanql.train.business.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
@@ -11,19 +12,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
-import top.yuanql.train.business.domain.DailyTrainTicket;
-import top.yuanql.train.business.enums.ConfirmOrderStatusEnum;
-import top.yuanql.train.business.service.DailyTrainTicketService;
-import top.yuanql.train.common.context.LoginMemberContext;
-import top.yuanql.train.common.response.PageResp;
-import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.business.domain.ConfirmOrder;
 import top.yuanql.train.business.domain.ConfirmOrderExample;
+import top.yuanql.train.business.domain.DailyTrainTicket;
+import top.yuanql.train.business.enums.ConfirmOrderStatusEnum;
+import top.yuanql.train.business.enums.SeatTypeEnum;
 import top.yuanql.train.business.mapper.ConfirmOrderMapper;
-import top.yuanql.train.business.req.ConfirmOrderQueryReq;
 import top.yuanql.train.business.req.ConfirmOrderDoReq;
+import top.yuanql.train.business.req.ConfirmOrderQueryReq;
+import top.yuanql.train.business.req.ConfirmOrderTicketReq;
 import top.yuanql.train.business.response.ConfirmOrderQueryResp;
 import top.yuanql.train.business.service.ConfirmOrderService;
+import top.yuanql.train.business.service.DailyTrainTicketService;
+import top.yuanql.train.common.context.LoginMemberContext;
+import top.yuanql.train.common.exception.BusinessException;
+import top.yuanql.train.common.exception.BusinessExceptionEnum;
+import top.yuanql.train.common.response.PageResp;
+import top.yuanql.train.common.util.SnowUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -119,7 +124,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
 
         // 扣减余票数量，并判断余票是否足够
-
+        reduceTickets(confirmOrderSaveReq, dailyTrainTicket);
 
         // 选座
 
@@ -145,5 +150,42 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
 
 
+    }
+
+    private static void reduceTickets(ConfirmOrderDoReq confirmOrderSaveReq, DailyTrainTicket dailyTrainTicket) {
+        for (ConfirmOrderTicketReq ticketReq : confirmOrderSaveReq.getTickets()) {
+            String typeCode = ticketReq.getSeatTypeCode();
+            SeatTypeEnum seatTypeEnum = EnumUtil.getBy(SeatTypeEnum::getCode, typeCode);
+            switch (seatTypeEnum) {
+                case YDZ -> {
+                    int countLeft = dailyTrainTicket.getYdz() - 1;
+                    if (countLeft < 0) {
+                        throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_TICKET_COUNT_ERROR);
+                    }
+                    dailyTrainTicket.setYdz(countLeft);
+                }
+                case EDZ -> {
+                    int countLeft = dailyTrainTicket.getEdz() - 1;
+                    if (countLeft < 0) {
+                        throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_TICKET_COUNT_ERROR);
+                    }
+                    dailyTrainTicket.setEdz(countLeft);
+                }
+                case RW -> {
+                    int countLeft = dailyTrainTicket.getRw() - 1;
+                    if (countLeft < 0) {
+                        throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_TICKET_COUNT_ERROR);
+                    }
+                    dailyTrainTicket.setRw(countLeft);
+                }
+                case YW -> {
+                    int countLeft = dailyTrainTicket.getYw() - 1;
+                    if (countLeft < 0) {
+                        throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_TICKET_COUNT_ERROR);
+                    }
+                    dailyTrainTicket.setYw(countLeft);
+                }
+            }
+        }
     }
 }
