@@ -3,11 +3,10 @@ package top.yuanql.train.business.controller.admin;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import top.yuanql.train.common.context.LoginMemberContext;
 import top.yuanql.train.common.response.CommonResp;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.business.req.ConfirmOrderQueryReq;
-import top.yuanql.train.business.req.ConfirmOrderSaveReq;
+import top.yuanql.train.business.req.ConfirmOrderDoReq;
 import top.yuanql.train.business.response.ConfirmOrderQueryResp;
 import top.yuanql.train.business.service.ConfirmOrderService;
 
@@ -20,7 +19,7 @@ public class ConfirmOrderAdminController {
     private ConfirmOrderService confirmOrderService;
 
     @PostMapping("/save")
-    public CommonResp<Object> save(@Valid @RequestBody ConfirmOrderSaveReq req) {
+    public CommonResp<Object> save(@Valid @RequestBody ConfirmOrderDoReq req) {
         confirmOrderService.save(req);
         return new CommonResp<>();
     }
