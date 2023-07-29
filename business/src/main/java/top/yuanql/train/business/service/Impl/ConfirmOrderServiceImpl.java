@@ -11,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
+import top.yuanql.train.business.domain.DailyTrainTicket;
 import top.yuanql.train.business.enums.ConfirmOrderStatusEnum;
+import top.yuanql.train.business.service.DailyTrainTicketService;
 import top.yuanql.train.common.context.LoginMemberContext;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
@@ -23,6 +25,7 @@ import top.yuanql.train.business.req.ConfirmOrderDoReq;
 import top.yuanql.train.business.response.ConfirmOrderQueryResp;
 import top.yuanql.train.business.service.ConfirmOrderService;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -33,6 +36,9 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
     @Resource
     private ConfirmOrderMapper confirmOrderMapper;
+
+    @Resource
+    private DailyTrainTicketService dailyTrainTicketService;
 
     @Override
     public void save(ConfirmOrderDoReq confirmOrderSaveReq) {
@@ -83,16 +89,21 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         // 省略业务数据校验，如：车次是否存在，余票是否存在，车次是否再有效期内，tickets条数>0，同乘客同车次是否已买过票
 
 
+        Date date = confirmOrderSaveReq.getDate();
+        String trainCode = confirmOrderSaveReq.getTrainCode();
+        String start = confirmOrderSaveReq.getStart();
+        String end = confirmOrderSaveReq.getEnd();
+
         // 保存确认订单，状态初始
         DateTime now = DateTime.now();
 
         ConfirmOrder confirmOrder = new ConfirmOrder();
         confirmOrder.setId(SnowUtil.getSnowflakeNextId());
         confirmOrder.setMemberId(LoginMemberContext.getId());
-        confirmOrder.setDate(confirmOrderSaveReq.getDate());
-        confirmOrder.setTrainCode(confirmOrderSaveReq.getTrainCode());
-        confirmOrder.setStart(confirmOrderSaveReq.getStart());
-        confirmOrder.setEnd(confirmOrderSaveReq.getEnd());
+        confirmOrder.setDate(date);
+        confirmOrder.setTrainCode(trainCode);
+        confirmOrder.setStart(start);
+        confirmOrder.setEnd(end);
         confirmOrder.setDailyTrainTicketId(confirmOrderSaveReq.getDailyTrainTicketId());
         confirmOrder.setStatus(ConfirmOrderStatusEnum.INIT.getCode());
         confirmOrder.setCreateTime(now);
@@ -103,6 +114,8 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
 
         // 查余票记录，需要得到真实的库存
+        DailyTrainTicket dailyTrainTicket = dailyTrainTicketService.selectByUnique(date, trainCode, start, end);
+        LOG.info("查出余票记录：{}", dailyTrainTicket);
 
 
         // 扣减余票数量，并判断余票是否足够

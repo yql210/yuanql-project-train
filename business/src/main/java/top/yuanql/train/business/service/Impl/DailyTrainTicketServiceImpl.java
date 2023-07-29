@@ -178,4 +178,22 @@ public class DailyTrainTicketServiceImpl implements DailyTrainTicketService {
         LOG.info("结束生成日期【{}】车次【{}】的余票信息", DateUtil.formatDate(date), trainCode);
     }
 
+    @Override
+    public DailyTrainTicket selectByUnique(Date date, String trainCode, String start, String end) {
+
+        DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();
+        dailyTrainTicketExample.createCriteria()
+                .andDateEqualTo(date)
+                .andTrainCodeEqualTo(trainCode)
+                .andStartEqualTo(start)
+                .andEndEqualTo(end);
+        List<DailyTrainTicket> dailyTrainTickets = dailyTrainTicketMapper.selectByExample(dailyTrainTicketExample);
+        if (CollUtil.isNotEmpty(dailyTrainTickets)) {
+            return dailyTrainTickets.get(0);
+        } else {
+            return null;
+        }
+
+    }
+
 }
