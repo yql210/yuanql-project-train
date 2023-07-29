@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -16,6 +17,7 @@ import top.yuanql.train.business.domain.ConfirmOrder;
 import top.yuanql.train.business.domain.ConfirmOrderExample;
 import top.yuanql.train.business.domain.DailyTrainTicket;
 import top.yuanql.train.business.enums.ConfirmOrderStatusEnum;
+import top.yuanql.train.business.enums.SeatColEnum;
 import top.yuanql.train.business.enums.SeatTypeEnum;
 import top.yuanql.train.business.mapper.ConfirmOrderMapper;
 import top.yuanql.train.business.req.ConfirmOrderDoReq;
@@ -30,6 +32,7 @@ import top.yuanql.train.common.exception.BusinessExceptionEnum;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -98,6 +101,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         String trainCode = confirmOrderSaveReq.getTrainCode();
         String start = confirmOrderSaveReq.getStart();
         String end = confirmOrderSaveReq.getEnd();
+        List<ConfirmOrderTicketReq> ticketReqs = confirmOrderSaveReq.getTickets();
 
         // 保存确认订单，状态初始
         DateTime now = DateTime.now();
@@ -113,7 +117,7 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         confirmOrder.setStatus(ConfirmOrderStatusEnum.INIT.getCode());
         confirmOrder.setCreateTime(now);
         confirmOrder.setUpdateTime(now);
-        confirmOrder.setTickets(JSON.toJSONString(confirmOrderSaveReq.getTickets()));
+        confirmOrder.setTickets(JSON.toJSONString(ticketReqs));
 
         confirmOrderMapper.insert(confirmOrder);
 
@@ -125,6 +129,49 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
         // 扣减余票数量，并判断余票是否足够
         reduceTickets(confirmOrderSaveReq, dailyTrainTicket);
+
+        // 计算相对第一个座位的偏离值
+        // 比如选择的是c1、d2，则偏移量为：[0, 5]
+        // 比如选择的是a1、b1、c1，则偏移量为：[0, 1, 2]
+        ConfirmOrderTicketReq ticketReq = ticketReqs.get(0);
+        if (StrUtil.isNotBlank(ticketReq.getSeat())) {
+            LOG.info("本次购票有选座");
+            // 查出本次选座的座位类型都有那些列，用于计算所选座位与第一个座位的偏离值
+            List<SeatColEnum> colEnumList = SeatColEnum.getColsByType(ticketReq.getSeatTypeCode());
+            LOG.info("本次选座的座位类型包含的列：{}", colEnumList);
+
+            // 组成和前端两拍选座一样的列表，用于作参照的座位列表。例如：referSeatList = {A1, C1, D1, F1, A2, C2, D2, F2}
+            List<String > referSeatList = new ArrayList<>();
+
+            for (int i = 1; i <= 2; i++) {
+                for (SeatColEnum seatColEnum: colEnumList) {
+                    referSeatList.add(seatColEnum.getCode() + i);
+                }
+            }
+            LOG.info("用于做参照的两排座位");
+
+            // 绝对偏移值，即：在操作座位列表中的位置
+            List<Integer> aboluteOffsetList = new ArrayList<>();
+            for (ConfirmOrderTicketReq ticket: ticketReqs) {
+                int index = referSeatList.indexOf(ticket.getSeat());
+                aboluteOffsetList.add(index);
+            }
+            LOG.info("计算得到所有座位的绝对偏移值：{}", aboluteOffsetList);
+
+            List<Integer> offsetList = new ArrayList<>();
+            for (Integer index : aboluteOffsetList) {
+                int offeset = index - aboluteOffsetList.get(0);
+                offsetList.add(offeset);
+            }
+            LOG.info("计算得到所有座位的相对第一个座位移值：{}", offsetList);
+
+
+
+        } else {
+            LOG.info("本次购票没有选座");
+
+
+        }
 
         // 选座
 
