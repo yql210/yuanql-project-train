@@ -1,11 +1,13 @@
 package top.yuanql.train.business.service;
 
+import top.yuanql.train.business.domain.DailyTrainSeat;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.business.req.DailyTrainSeatQueryReq;
 import top.yuanql.train.business.req.DailyTrainSeatSaveReq;
 import top.yuanql.train.business.response.DailyTrainSeatQueryResp;
 
 import java.util.Date;
+import java.util.List;
 
 
 public interface DailyTrainSeatService {
@@ -20,4 +22,5 @@ public interface DailyTrainSeatService {
 
     public int countSeat(Date date, String trainCode, String seatType);
 
+    List<DailyTrainSeat> selectByCarriage(Date date, String trainCode, Integer carriageIndex);
 }

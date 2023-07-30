@@ -13,9 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
-import top.yuanql.train.business.domain.ConfirmOrder;
-import top.yuanql.train.business.domain.ConfirmOrderExample;
-import top.yuanql.train.business.domain.DailyTrainTicket;
+import top.yuanql.train.business.domain.*;
 import top.yuanql.train.business.enums.ConfirmOrderStatusEnum;
 import top.yuanql.train.business.enums.SeatColEnum;
 import top.yuanql.train.business.enums.SeatTypeEnum;
@@ -25,6 +23,8 @@ import top.yuanql.train.business.req.ConfirmOrderQueryReq;
 import top.yuanql.train.business.req.ConfirmOrderTicketReq;
 import top.yuanql.train.business.response.ConfirmOrderQueryResp;
 import top.yuanql.train.business.service.ConfirmOrderService;
+import top.yuanql.train.business.service.DailyTrainCarriageService;
+import top.yuanql.train.business.service.DailyTrainSeatService;
 import top.yuanql.train.business.service.DailyTrainTicketService;
 import top.yuanql.train.common.context.LoginMemberContext;
 import top.yuanql.train.common.exception.BusinessException;
@@ -47,6 +47,12 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
     @Resource
     private DailyTrainTicketService dailyTrainTicketService;
+
+    @Resource
+    private DailyTrainCarriageService dailyTrainCarriageService;
+
+    @Resource
+    private DailyTrainSeatService dailyTrainSeatService;
 
     @Override
     public void save(ConfirmOrderDoReq confirmOrderSaveReq) {
@@ -133,11 +139,11 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
         // 计算相对第一个座位的偏离值
         // 比如选择的是c1、d2，则偏移量为：[0, 5]
         // 比如选择的是a1、b1、c1，则偏移量为：[0, 1, 2]
-        ConfirmOrderTicketReq ticketReq = ticketReqs.get(0);
-        if (StrUtil.isNotBlank(ticketReq.getSeat())) {
+        ConfirmOrderTicketReq ticketReq0 = ticketReqs.get(0);
+        if (StrUtil.isNotBlank(ticketReq0.getSeat())) {
             LOG.info("本次购票有选座");
             // 查出本次选座的座位类型都有那些列，用于计算所选座位与第一个座位的偏离值
-            List<SeatColEnum> colEnumList = SeatColEnum.getColsByType(ticketReq.getSeatTypeCode());
+            List<SeatColEnum> colEnumList = SeatColEnum.getColsByType(ticketReq0.getSeatTypeCode());
             LOG.info("本次选座的座位类型包含的列：{}", colEnumList);
 
             // 组成和前端两拍选座一样的列表，用于作参照的座位列表。例如：referSeatList = {A1, C1, D1, F1, A2, C2, D2, F2}
@@ -166,10 +172,23 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             LOG.info("计算得到所有座位的相对第一个座位移值：{}", offsetList);
 
 
+            getSeat(date,
+                    trainCode,
+                    ticketReq0.getSeatTypeCode(),
+                    ticketReq0.getSeat().split("")[0],  // 从A1得到A
+                    offsetList);
+
 
         } else {
             LOG.info("本次购票没有选座");
 
+            for (ConfirmOrderTicketReq ticket: ticketReqs) {
+                getSeat(date,
+                        trainCode,
+                        ticket.getSeatTypeCode(),
+                        null,
+                        null);
+            }
 
         }
 
@@ -196,6 +215,23 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
             // 更新确认订单为成功。
 
 
+
+    }
+
+    private void getSeat(Date date, String trainCode, String seatType, String column, List<Integer> offsetList) {
+        List<DailyTrainCarriage> carriageList = dailyTrainCarriageService.selectBySeatType(date, trainCode, seatType);
+        LOG.info("共查出{}个符合条件的车厢",carriageList.size());
+
+        // 一个车厢一个车厢获取座位数据
+
+        for (DailyTrainCarriage dailyTrainCarriage: carriageList) {
+            LOG.info("开始从车厢{}选座", dailyTrainCarriage.getIndex());
+
+            List<DailyTrainSeat> seatList =
+                    dailyTrainSeatService.selectByCarriage(date, trainCode, dailyTrainCarriage.getIndex());
+
+            LOG.info("车厢{}的座位数:{}", dailyTrainCarriage.getIndex(), seatList.size());
+        }
 
     }
 
