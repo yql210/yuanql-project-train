@@ -3,6 +3,7 @@ package top.yuanql.train.business.service.Impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.EnumUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
@@ -176,7 +177,9 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                     trainCode,
                     ticketReq0.getSeatTypeCode(),
                     ticketReq0.getSeat().split("")[0],  // 从A1得到A
-                    offsetList);
+                    offsetList,
+                    dailyTrainTicket.getStartIndex(),
+                    dailyTrainTicket.getEndIndex());
 
 
         } else {
@@ -187,7 +190,9 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                         trainCode,
                         ticket.getSeatTypeCode(),
                         null,
-                        null);
+                        null,
+                        dailyTrainTicket.getStartIndex(),
+                        dailyTrainTicket.getEndIndex());
             }
 
         }
@@ -218,7 +223,16 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
     }
 
-    private void getSeat(Date date, String trainCode, String seatType, String column, List<Integer> offsetList) {
+    /**
+     * 挑座位，如果有选座，则一次性挑完，如果无选座，则一个一个挑
+     * @param date
+     * @param trainCode
+     * @param seatType
+     * @param column
+     * @param offsetList
+     */
+    private void getSeat(Date date, String trainCode, String seatType, String column, List<Integer> offsetList
+            , Integer startIndex, Integer endIndex) {
         List<DailyTrainCarriage> carriageList = dailyTrainCarriageService.selectBySeatType(date, trainCode, seatType);
         LOG.info("共查出{}个符合条件的车厢",carriageList.size());
 
@@ -231,9 +245,62 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
                     dailyTrainSeatService.selectByCarriage(date, trainCode, dailyTrainCarriage.getIndex());
 
             LOG.info("车厢{}的座位数:{}", dailyTrainCarriage.getIndex(), seatList.size());
+            for (DailyTrainSeat dailyTrainSeat : seatList) {
+                boolean isChoose = calSell(dailyTrainSeat, startIndex, endIndex);
+                if (isChoose) {
+                    LOG.info("选中座位");
+                    break;
+                } else {
+                    LOG.info("未选中座位");
+                    continue;
+
+                }
+            }
+
         }
 
     }
+
+    /**
+     * 计算某座位在区间内可买
+     * 例子：sell = 10001，本次购买区间站 1~4, 则区间已售 000
+     * 全都是0，表示这个区间可买，只要有1，就表示区间内已售过票
+     *
+     * 选中后，要计算购票后的sell，比如原来是1000110101，本次购买区间为 1~4 站
+     * 方案：狗营造本次购票造成的售卖信息0111000000，和原sell 10001 按位与。最终得到111111
+     */
+
+    private boolean calSell(DailyTrainSeat dailyTrainSeat, Integer startIndex, Integer endIndex) {
+        // 10001
+        String sell = dailyTrainSeat.getSell();
+        String sellPart = sell.substring(startIndex, endIndex);
+        if (Integer.parseInt(sellPart) > 0) {
+            LOG.info("座位{}在本次车站区间{}~{}已销售，不可选中座位", dailyTrainSeat.getCarriageSeatIndex(), startIndex, endIndex);
+            return false;
+        } else {
+            LOG.info("座位{}在本次车站区间{}~{}未销售，可正常选票", dailyTrainSeat.getCarriageSeatIndex(), startIndex, endIndex);
+            // 111
+            String curSell = sellPart.replace('0', '1');
+            // 0111
+            curSell = StrUtil.fillBefore(curSell, '0', endIndex);
+            // 01110
+            curSell = StrUtil.fillAfter(curSell, '0', sell.length());
+
+            // 当前区间售票信息与库里的已售信息按位与，即可得到该座位卖出此票后的售票情况
+            // 32
+            int newSellInt = NumberUtil.binaryToInt(curSell) | NumberUtil.binaryToInt(sell);
+            // 11111
+            String newSell = NumberUtil.getBinaryStr(newSellInt);
+
+            newSell = StrUtil.fillBefore(newSell, '0', sell.length());
+
+            LOG.info("座位{}被选中，原售票信息：{}，车站区间：{}~{}，即：{}，最终售票信息：{}"
+                    , dailyTrainSeat.getCarriageSeatIndex(), sell, startIndex, endIndex, curSell, newSell);
+            dailyTrainSeat.setSell(newSell);
+            return true;
+        }
+    }
+
 
     private static void reduceTickets(ConfirmOrderDoReq confirmOrderSaveReq, DailyTrainTicket dailyTrainTicket) {
         for (ConfirmOrderTicketReq ticketReq : confirmOrderSaveReq.getTickets()) {
