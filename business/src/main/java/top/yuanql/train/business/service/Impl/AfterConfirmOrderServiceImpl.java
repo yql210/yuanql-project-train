@@ -5,9 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
+import top.yuanql.train.business.domain.ConfirmOrder;
 import top.yuanql.train.business.domain.DailyTrainSeat;
 import top.yuanql.train.business.domain.DailyTrainTicket;
+import top.yuanql.train.business.enums.ConfirmOrderStatusEnum;
 import top.yuanql.train.business.feign.MemberFeign;
+import top.yuanql.train.business.mapper.ConfirmOrderMapper;
 import top.yuanql.train.business.mapper.DailyTrainSeatMapper;
 import top.yuanql.train.business.mapper.cust.DailyTrainTicketCustMapper;
 import top.yuanql.train.business.req.ConfirmOrderTicketReq;
@@ -34,6 +37,9 @@ public class AfterConfirmOrderServiceImpl implements AfterConfirmOrderService {
     @Resource
     private MemberFeign memberFeign;
 
+    @Resource
+    private ConfirmOrderMapper confirmOrderMapper;
+
     /**
      * 选中座位后的事务处理
      *     座位表修改售卖情况sell；
@@ -42,7 +48,7 @@ public class AfterConfirmOrderServiceImpl implements AfterConfirmOrderService {
      *     更新确认订单为成功。
      */
     @Override
-    public void afterDoConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalSeatList, List<ConfirmOrderTicketReq> tickets) {
+    public void afterDoConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalSeatList, List<ConfirmOrderTicketReq> tickets, ConfirmOrder confirmOrder) {
 
         for (int j = 0; j < finalSeatList.size(); j++) {
             DailyTrainSeat dailyTrainSeat = finalSeatList.get(j);
@@ -124,6 +130,12 @@ public class AfterConfirmOrderServiceImpl implements AfterConfirmOrderService {
             LOG.info("调用member接口，返回：{}", commonResp);
 
 
+            // 更新订单状态为成功
+            ConfirmOrder confirmOrderForUpdate = new ConfirmOrder();
+            confirmOrderForUpdate.setId(confirmOrder.getId());
+            confirmOrderForUpdate.setUpdateTime(new Date());
+            confirmOrderForUpdate.setStatus(ConfirmOrderStatusEnum.SUCCESS.getCode());
+            confirmOrderMapper.updateByPrimaryKeySelective(confirmOrderForUpdate);
         }
 
 
