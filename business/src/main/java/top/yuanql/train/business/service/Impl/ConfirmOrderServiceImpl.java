@@ -24,10 +24,7 @@ import top.yuanql.train.business.req.ConfirmOrderDoReq;
 import top.yuanql.train.business.req.ConfirmOrderQueryReq;
 import top.yuanql.train.business.req.ConfirmOrderTicketReq;
 import top.yuanql.train.business.response.ConfirmOrderQueryResp;
-import top.yuanql.train.business.service.ConfirmOrderService;
-import top.yuanql.train.business.service.DailyTrainCarriageService;
-import top.yuanql.train.business.service.DailyTrainSeatService;
-import top.yuanql.train.business.service.DailyTrainTicketService;
+import top.yuanql.train.business.service.*;
 import top.yuanql.train.common.context.LoginMemberContext;
 import top.yuanql.train.common.exception.BusinessException;
 import top.yuanql.train.common.exception.BusinessExceptionEnum;
@@ -55,6 +52,9 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
     @Resource
     private DailyTrainSeatService dailyTrainSeatService;
+
+    @Resource
+    private AfterConfirmOrderService afterConfirmOrderService;
 
     @Override
     public void save(ConfirmOrderDoReq confirmOrderSaveReq) {
@@ -205,28 +205,13 @@ public class ConfirmOrderServiceImpl implements ConfirmOrderService {
 
         LOG.info("最终的选座：{}", finalSeatList);
 
-        // 选座
-
-            // 一个车厢一个车厢获取座位数据
-
-
-            // 挑选符合条件的座位，如果这个车厢不满足，则进入下一个车厢（多个选座应该在同一个车厢）
-
-
-
         // 选中座位后的事务处理
-
             // 座位表修改售卖情况sell；
-
-
             // 余票详情表修改余票；
-
-
             // 为会员增加购票记录；
-
-
             // 更新确认订单为成功。
 
+        afterConfirmOrderService.afterDoConfirm(finalSeatList);
 
 
     }
