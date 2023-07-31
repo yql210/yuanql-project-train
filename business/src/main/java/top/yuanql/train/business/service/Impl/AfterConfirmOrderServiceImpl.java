@@ -7,9 +7,14 @@ import org.springframework.stereotype.Service;
 import top.yuanql.train.business.config.BusinessApplication;
 import top.yuanql.train.business.domain.DailyTrainSeat;
 import top.yuanql.train.business.domain.DailyTrainTicket;
+import top.yuanql.train.business.feign.MemberFeign;
 import top.yuanql.train.business.mapper.DailyTrainSeatMapper;
 import top.yuanql.train.business.mapper.cust.DailyTrainTicketCustMapper;
+import top.yuanql.train.business.req.ConfirmOrderTicketReq;
 import top.yuanql.train.business.service.AfterConfirmOrderService;
+import top.yuanql.train.common.context.LoginMemberContext;
+import top.yuanql.train.common.request.MemberTicketReq;
+import top.yuanql.train.common.response.CommonResp;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +31,9 @@ public class AfterConfirmOrderServiceImpl implements AfterConfirmOrderService {
     @Resource
     private DailyTrainTicketCustMapper dailyTrainTicketCustMapper;
 
+    @Resource
+    private MemberFeign memberFeign;
+
     /**
      * 选中座位后的事务处理
      *     座位表修改售卖情况sell；
@@ -34,9 +42,10 @@ public class AfterConfirmOrderServiceImpl implements AfterConfirmOrderService {
      *     更新确认订单为成功。
      */
     @Override
-    public void afterDoConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalSeatList) {
+    public void afterDoConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalSeatList, List<ConfirmOrderTicketReq> tickets) {
 
-        for (DailyTrainSeat dailyTrainSeat : finalSeatList) {
+        for (int j = 0; j < finalSeatList.size(); j++) {
+            DailyTrainSeat dailyTrainSeat = finalSeatList.get(j);
             DailyTrainSeat seatForUpdate = new DailyTrainSeat();
             seatForUpdate.setId(dailyTrainSeat.getId());
             seatForUpdate.setSell(dailyTrainSeat.getSell());
@@ -69,7 +78,7 @@ public class AfterConfirmOrderServiceImpl implements AfterConfirmOrderService {
             Integer minStartIndex = 0;
             for (int i = startIndex - 1; i >= 0; i--) {
                 char aChar = chars[i];
-                if (aChar == '1' ) {
+                if (aChar == '1') {
                     minStartIndex = i + 1;
                     break;
                 }
@@ -95,6 +104,24 @@ public class AfterConfirmOrderServiceImpl implements AfterConfirmOrderService {
                     minEndIndex,
                     maxEndIndex
             );
+
+            // 调用会员服务接口，为会员增加一张车票
+            MemberTicketReq memberTicketReq = new MemberTicketReq();
+            memberTicketReq.setMemberId(LoginMemberContext.getId());
+            memberTicketReq.setPassengerId(tickets.get(j).getPassengerId());
+            memberTicketReq.setPassengerName(tickets.get(j).getPassengerName());
+            memberTicketReq.setTrainDate(dailyTrainTicket.getDate());
+            memberTicketReq.setTrainCode(dailyTrainTicket.getTrainCode());
+            memberTicketReq.setCarriageIndex(dailyTrainSeat.getCarriageIndex());
+            memberTicketReq.setSeatRow(dailyTrainSeat.getRow());
+            memberTicketReq.setSeatCol(dailyTrainSeat.getCol());
+            memberTicketReq.setStartStation(dailyTrainTicket.getStart());
+            memberTicketReq.setStartTime(dailyTrainTicket.getStartTime());
+            memberTicketReq.setEndStation(dailyTrainTicket.getEnd());
+            memberTicketReq.setEndTime(dailyTrainTicket.getEndTime());
+            memberTicketReq.setSeatType(dailyTrainSeat.getSeatType());
+            CommonResp<Object> commonResp = memberFeign.save(memberTicketReq);
+            LOG.info("调用member接口，返回：{}", commonResp);
 
 
         }
