@@ -2,13 +2,13 @@ package top.yuanql.train.member.service.Impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
-import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import top.yuanql.train.common.request.MemberTicketReq;
 import top.yuanql.train.common.response.PageResp;
 import top.yuanql.train.common.util.SnowUtil;
 import top.yuanql.train.member.conf.MemberApplication;
@@ -16,7 +16,6 @@ import top.yuanql.train.member.domain.Ticket;
 import top.yuanql.train.member.domain.TicketExample;
 import top.yuanql.train.member.mapper.TicketMapper;
 import top.yuanql.train.member.req.TicketQueryReq;
-import top.yuanql.train.member.req.TicketSaveReq;
 import top.yuanql.train.member.response.TicketQueryResp;
 import top.yuanql.train.member.service.TicketService;
 
@@ -32,19 +31,14 @@ public class TicketServiceImpl implements TicketService {
     private TicketMapper ticketMapper;
 
     @Override
-    public void save(TicketSaveReq ticketSaveReq) {
+    public void save(MemberTicketReq req) {
         DateTime now = DateTime.now();
-        Ticket ticket = BeanUtil.copyProperties(ticketSaveReq, Ticket.class);
-        if (ObjectUtil.isNull(ticket.getId())) {
-            ticket.setId(SnowUtil.getSnowflakeNextId());
-            ticket.setCreateTime(now);
-            ticket.setUpdateTime(now);
-            ticketMapper.insert(ticket);
-        } else {
-            ticket.setUpdateTime(now);
-            ticketMapper.updateByPrimaryKey(ticket);
+        Ticket ticket = BeanUtil.copyProperties(req, Ticket.class);
+        ticket.setId(SnowUtil.getSnowflakeNextId());
+        ticket.setCreateTime(now);
+        ticket.setUpdateTime(now);
+        ticketMapper.insert(ticket);
 
-        }
     }
 
     @Override
