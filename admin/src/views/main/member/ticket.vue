@@ -15,7 +15,7 @@
       </template>
       <template v-else-if="column.dataIndex === 'seatCol'">
         <span v-for="item in SEAT_COL_ARRAY" :key="item.code">
-          <span v-if="item.code === record.seatCol">
+          <span v-if="item.code === record.seatCol && item.type === record.seatType">
             {{item.desc}}
           </span>
         </span>
@@ -69,16 +69,6 @@ export default defineComponent({
     });
     let loading = ref(false);
     const columns = [
-    {
-      title: '会员id',
-      dataIndex: 'memberId',
-      key: 'memberId',
-    },
-    {
-      title: '乘客id',
-      dataIndex: 'passengerId',
-      key: 'passengerId',
-    },
     {
       title: '乘客姓名',
       dataIndex: 'passengerName',
