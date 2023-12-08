@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: yuanql-rain-membner # 注册中心的名字
+  profiles:
+    active: dev   # 启动环境。nacos根据环境读取不同的配置dataId： yuanql-rain-membner-dev.properties
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      config:
+        file-extension: properties  # 配置文件的后缀名
+  config:
+    import:
+      - nacos:nacos-config-example.properties?refresh=true

@@ -75,6 +75,15 @@
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>1.4.6</version>
             </dependency>
+
+            <!-- https://github.com/alibaba/spring-cloud-alibaba/blob/2022.x/README-zh.md-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2022.0.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

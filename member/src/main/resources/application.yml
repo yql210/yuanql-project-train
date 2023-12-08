@@ -5,8 +5,6 @@ server:
 
 
 spring:
-  application:
-    name: yuanql-rain-membner
   datasource:
     url: jdbc:mysql://sh-cynosdbmysql-grp-ny3vckj6.sql.tencentcdb.com:26886/train_member?characterEncoding=UTF8&autoReconnect=true&serverTimezone=Asia/Shanghai
     username: train
