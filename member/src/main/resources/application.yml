@@ -20,3 +20,7 @@ mybatis:
 logging:
   level:
     top.yuanql.train.member.mapper: trace
+
+# nacos的配置
+test:
+  nacos: Member
